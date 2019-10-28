@@ -1,6 +1,6 @@
-from distutils.core import setup
+import setuptools
 
-setup(name='SwissKnife',
+setuptools.setup(name='SwissKnife',
       version='1.0',
       description='Python Distribution Utilities',
       author='Greg Ward',
