@@ -1,6 +1,9 @@
 *.pyc
-venv/
 .vscode
 __pycache__/
 *.egg-info
+
+# Folders
 build/
+dist/
+venv/
