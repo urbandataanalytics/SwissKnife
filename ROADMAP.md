@@ -8,7 +8,7 @@
     - List files in a gcloud directory
     - Check if a file is in a directory
 - dates 
-    - Date to "crawler" format. Ex: 2019-01-01 -> 2019W01
+    - Date to "crawler date format". Ex: 2019-01-01 -> 2019W01
 - Utils
     - Get "Execution Environment" from env variables.
     - Load config files (using standard of Watchdog).
