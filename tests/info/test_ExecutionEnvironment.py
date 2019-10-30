@@ -1,33 +1,8 @@
 import unittest
-import os
 
 from SwissKnife.info import ExecutionEnvironment
 
-class TestEnvMethods(unittest.TestCase):
-
-    def _only_is_pro(self, execution_environment: ExecutionEnvironment):
-        
-        self.assertTrue(execution_environment.is_pro())
-        self.assertFalse(execution_environment.is_pre())
-        self.assertFalse(execution_environment.is_dev())
-
-        self.assertEqual(execution_environment, ExecutionEnvironment.PRO)
-
-    def _only_is_pre(self, execution_environment: ExecutionEnvironment):
-        
-        self.assertFalse(execution_environment.is_pro())
-        self.assertTrue(execution_environment.is_pre())
-        self.assertFalse(execution_environment.is_dev())
-
-        self.assertEqual(execution_environment, ExecutionEnvironment.PRE)
-
-    def _only_is_dev(self, execution_environment: ExecutionEnvironment):
-
-        self.assertFalse(execution_environment.is_pro())
-        self.assertFalse(execution_environment.is_pre())
-        self.assertTrue(execution_environment.is_dev())
-
-        self.assertEqual(execution_environment, ExecutionEnvironment.DEV)
+class TestExecutionEnvironment(unittest.TestCase):
 
     def test_is_pro(self):
 
@@ -52,3 +27,30 @@ class TestEnvMethods(unittest.TestCase):
         for env_value in ["asdfasdf", "PRU", "Der","",None]:
             execution_environment = ExecutionEnvironment.create(env_value)
             self._only_is_pre(execution_environment)
+
+    
+   # def test_current_environment_object(self):
+
+    def _only_is_pro(self, execution_environment: ExecutionEnvironment):
+        
+        self.assertTrue(execution_environment.is_pro())
+        self.assertFalse(execution_environment.is_pre())
+        self.assertFalse(execution_environment.is_dev())
+
+        self.assertEqual(execution_environment, ExecutionEnvironment.PRO)
+
+    def _only_is_pre(self, execution_environment: ExecutionEnvironment):
+        
+        self.assertFalse(execution_environment.is_pro())
+        self.assertTrue(execution_environment.is_pre())
+        self.assertFalse(execution_environment.is_dev())
+
+        self.assertEqual(execution_environment, ExecutionEnvironment.PRE)
+
+    def _only_is_dev(self, execution_environment: ExecutionEnvironment):
+
+        self.assertFalse(execution_environment.is_pro())
+        self.assertFalse(execution_environment.is_pre())
+        self.assertTrue(execution_environment.is_dev())
+
+        self.assertEqual(execution_environment, ExecutionEnvironment.DEV)
