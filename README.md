@@ -1,5 +1,7 @@
 # SwissKnife
 
+[![Build Status](http://datasrv.urbandataanalytics.com:8080/job/SwissKnife_master_test/badge/icon)](http://datasrv.urbandataanalytics.com:8080/job/SwissKnife_master_test/)
+
 Librería de utilidades y funcionalidades comunes creada por el equipo de Data Engineering de UDA Real Estate.
 
 ## Dockerfile
