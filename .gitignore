@@ -11,4 +11,5 @@ venv/
 
 # Nose files
 .noseids
+.coverage
 nosetests.xml
