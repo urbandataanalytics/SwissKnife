@@ -12,7 +12,7 @@ class ExecutionEnvironment(Enum):
     PRO = "pro"
     PRE = "pre"
     DEV = "dev"
-
+    
     @staticmethod
     def create(env_str: str) -> "ExecutionEnvironment":
         """Create an ExecutionEnvironment from the provided text. Convert it
@@ -24,15 +24,16 @@ class ExecutionEnvironment(Enum):
         :return: An ExecutionEnvironment based on the previous value.
         :rtype: ExecutionEnvironment
         """
+        default_env = ExecutionEnvironment.DEV
 
         # Is none or other invalid type.
         if type(env_str) is not str:
-            return ExecutionEnvironment("pre")
+            return default_env
 
         try:
             return ExecutionEnvironment(env_str.lower())
         except ValueError:
-            return ExecutionEnvironment("pre")
+            return default_env
 
     def is_pro(self):
         """Return if the value of this ExecutionEnvironment is PRO.

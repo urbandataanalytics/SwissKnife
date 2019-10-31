@@ -26,7 +26,7 @@ class TestExecutionEnvironment(unittest.TestCase):
 
         for env_value in ["asdfasdf", "PRU", "Der","",None]:
             execution_environment = ExecutionEnvironment.create(env_value)
-            self._only_is_pre(execution_environment)
+            self._only_is_dev(execution_environment)
 
     
    # def test_current_environment_object(self):

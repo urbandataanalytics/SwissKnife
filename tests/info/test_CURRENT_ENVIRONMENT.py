@@ -32,7 +32,7 @@ class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
 
         for env_value in ["prU", "PRA", "asdfsdf", "unknown"]:
             self._set_current_env(env_value)
-            self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_pre())
+            self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_dev())
 
 
     
