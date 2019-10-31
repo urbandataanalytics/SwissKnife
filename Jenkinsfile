@@ -2,11 +2,15 @@ pipeline {
     agent any
     stages {
         stage("Build docker image") {
-            sh 'docker build -t swissknife:latest .'
+            steps{
+                sh 'docker build -t swissknife:latest .'
+            }
         }
         stage("Do tests and verify"){
-            sh 'docker run --rm swissknife:latest > nosetests.xml'
-            junit 'nosetests.xml'
+            steps{
+                sh 'docker run --rm swissknife:latest > nosetests.xml'
+                junit 'nosetests.xml'
+            }
         }
     }
     post {
