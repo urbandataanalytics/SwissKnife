@@ -1,8 +1,8 @@
 import setuptools
 
 DEPENDENCIES = [
-    'coverage',
-    'nose'
+    'coverage==4.5.4',
+    'nose==1.3.7'
 ]
 
 setuptools.setup(
