@@ -28,9 +28,6 @@ class TestExecutionEnvironment(unittest.TestCase):
             execution_environment = ExecutionEnvironment.create(env_value)
             self._only_is_dev(execution_environment)
 
-    
-   # def test_current_environment_object(self):
-
     def _only_is_pro(self, execution_environment: ExecutionEnvironment):
         
         self.assertTrue(execution_environment.is_pro())

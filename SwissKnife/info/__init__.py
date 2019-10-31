@@ -1,6 +1,6 @@
 import os
 
-# With this, we can import directly the class without to import the module.
+# With this, we can import directly the class without importing the module.
 from SwissKnife.info.ExecutionEnvironment import ExecutionEnvironment
 
 
