@@ -1,13 +1,13 @@
 import setuptools
 
 DEPENDENCIES = [
-    'coverage',
-    'nose'
+    'coverage==4.5.4',
+    'nose==1.3.7'
 ]
 
 setuptools.setup(
     name='SwissKnife',
-    version='0.1',
+    version='0.1.1',
     description='Utils and common libraries for Python',
     author='UDARealState Data engineering Team',
     url='https://bitbucket.org/udanalytics/swissknife',
