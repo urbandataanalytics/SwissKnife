@@ -13,5 +13,6 @@ setuptools.setup(
     url='https://bitbucket.org/udanalytics/swissknife',
     install_requires=DEPENDENCIES,
     packages=setuptools.find_packages(),
-    test_suite="nose.collector"
+    test_suite="nose.collector",
+    python_required=">=3.6"
 )
