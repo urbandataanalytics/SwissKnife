@@ -14,5 +14,8 @@ setuptools.setup(
     install_requires=DEPENDENCIES,
     packages=setuptools.find_packages(),
     test_suite="nose.collector",
-    python_required=">=3.6"
+    python_requires=">=3.6",
+    classifiers=[
+        "License :: OSI Approved :: MIT License"
+    ]
 )

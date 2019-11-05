@@ -3,7 +3,7 @@ from enum import Enum
 
 class ExecutionEnvironment(Enum):
     """ExutionEnvironment is an Enum that represents a possible ExecutionEnvironment.
-    Valid values are PRO, PRE and DEV. DEV is the default value.
+    Valid values are PRO, PRE, DEV and TEST. DEV is the default value.
     The static method "create" is the preferred method to create an ExecutionEnvironment because
     it transforms the input to a standard form (lower case). It will return the default value (DEV)
     if an invalid value (or a null value) is provided. 
@@ -12,6 +12,7 @@ class ExecutionEnvironment(Enum):
     PRO = "pro"
     PRE = "pre"
     DEV = "dev"
+    TEST = "test"
     
     @staticmethod
     def create(env_str: str) -> "ExecutionEnvironment":
@@ -60,3 +61,12 @@ class ExecutionEnvironment(Enum):
         """
 
         return self == ExecutionEnvironment.DEV
+
+    def is_test(self):
+        """Indicates if the value of this ExecutionEnvironment is TEST.
+        
+        :return: True if this ExecutionEnvironment is TEST.
+        :rtype: bool
+        """
+
+        return self == ExecutionEnvironment.TEST
