@@ -22,6 +22,12 @@ class TestExecutionEnvironment(unittest.TestCase):
             execution_environment = ExecutionEnvironment.create(env_value)
             self._only_is_dev(execution_environment)
 
+    def test_is_test(self):
+
+        for env_value in ["TEST", "test", "TeST"]:
+            execution_environment = ExecutionEnvironment.create(env_value)
+            self._only_is_test(execution_environment)
+
     def test_set_pre_with_invalid_env_value(self):
 
         for env_value in ["asdfasdf", "PRU", "Der","",None]:
@@ -33,6 +39,7 @@ class TestExecutionEnvironment(unittest.TestCase):
         self.assertTrue(execution_environment.is_pro())
         self.assertFalse(execution_environment.is_pre())
         self.assertFalse(execution_environment.is_dev())
+        self.assertFalse(execution_environment.is_test())
 
         self.assertEqual(execution_environment, ExecutionEnvironment.PRO)
 
@@ -41,6 +48,7 @@ class TestExecutionEnvironment(unittest.TestCase):
         self.assertFalse(execution_environment.is_pro())
         self.assertTrue(execution_environment.is_pre())
         self.assertFalse(execution_environment.is_dev())
+        self.assertFalse(execution_environment.is_test())
 
         self.assertEqual(execution_environment, ExecutionEnvironment.PRE)
 
@@ -49,5 +57,15 @@ class TestExecutionEnvironment(unittest.TestCase):
         self.assertFalse(execution_environment.is_pro())
         self.assertFalse(execution_environment.is_pre())
         self.assertTrue(execution_environment.is_dev())
+        self.assertFalse(execution_environment.is_test())
 
         self.assertEqual(execution_environment, ExecutionEnvironment.DEV)
+
+    def _only_is_test(self, execution_environment: ExecutionEnvironment):
+
+        self.assertFalse(execution_environment.is_pro())
+        self.assertFalse(execution_environment.is_pre())
+        self.assertFalse(execution_environment.is_dev())
+        self.assertTrue(execution_environment.is_test())
+
+        self.assertEqual(execution_environment, ExecutionEnvironment.TEST)

@@ -13,5 +13,9 @@ setuptools.setup(
     url='https://bitbucket.org/udanalytics/swissknife',
     install_requires=DEPENDENCIES,
     packages=setuptools.find_packages(),
-    test_suite="nose.collector"
+    test_suite="nose.collector",
+    python_requires=">=3.6",
+    classifiers=[
+        "License :: OSI Approved :: MIT License"
+    ]
 )

@@ -18,18 +18,19 @@ El objeto se encuentra localizado en **SwissKnife.info.CURRENT_ENVIRONMENT**. De
 
 Dicho objeto se trata de un enumerado con los siguientes valores:
 
-- PRO -> "preo"
-- PRE -> "pre"
-- DEV -> "dev"
-
+- PRO  -> "preo"
+- PRE  -> "pre"
+- DEV  -> "dev"
+- TEST -> "test
 
 Adicionalmente, tiene los siguientes métodos que simplifican conocer cual entorno de ejecución es sin tener que hacer comparaciones
 directas con el enumerado:
 
-- is_pro() -> bool
-- is_pre() -> bool
-- is_dev() -> bool
+- is_pro()  -> bool
+- is_pre()  -> bool
+- is_dev()  -> bool
+- is_test() -> bool
 
-El valor es tomado de la variable de entorno "ENV" que puede tener los valores "pro", "pre" y "dev". Se permite que el texto esté en 
+El valor es tomado de la variable de entorno "ENV" que puede tener los valores "pro", "pre", "dev" y "test". Se permite que el texto esté en 
 mayúscula total o parcialmente. Si dicha variable no existe o tiene un valor incorrecto, la aplicación devolverá un ExecutionEnvironment
-con el valor por defecto, *PRE*.
+con el valor por defecto, *DEV*.

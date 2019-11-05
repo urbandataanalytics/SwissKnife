@@ -20,13 +20,17 @@ class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_pre())
 
-
     def test_is_dev(self):
 
         for env_value in ["dev", "DEV", "Dev", "DEv"]:
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_dev())
 
+    def test_is_test(self):
+
+        for env_value in ["test", "TEST", "TeSt", "TEst"]:
+            self._set_current_env(env_value)
+            self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_test())
 
     def test_invalid_values(self):
 
