@@ -7,7 +7,7 @@ DEPENDENCIES = [
 
 setuptools.setup(
     name='UDASwissKnife',
-    version='0.1.1',
+    version='0.2.0',
     description='Utils and common libraries for Python',
     author='UDARealState Data engineering Team',
     url='https://bitbucket.org/udanalytics/swissknife',
