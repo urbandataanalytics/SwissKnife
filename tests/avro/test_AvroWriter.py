@@ -27,23 +27,25 @@ class test_AvroWriter(unittest.TestCase):
     def test_write_records(self):
 
         # Arrange
-        dummy_file = io.StringIO()
+        dummy_file = io.BytesIO()
 
         avro_writer = AvroWriter(dummy_file, self.example_schema)
 
         # Act
-        for record in example_records:
+        for record in self.example_records:
 
             avro_writer.write(record)
 
         avro_writer.close()
+
+        dummy_file.seek(0)
         
         # Assert
 
         readed_records = [record for record in fastavro.reader(dummy_file)]
 
-        sorted_expected = sorted(self.example_records, key=lambda x: x["name"])
-        sorted_result = sorted(readed_records, key=lambda x: x["name"])
+        sorted_expected = sorted(self.example_records, key=lambda x: x["Name"])
+        sorted_result = sorted(readed_records, key=lambda x: x["Name"])
 
         for expected_record, result_record in zip(sorted_expected, sorted_result):
 
@@ -52,7 +54,7 @@ class test_AvroWriter(unittest.TestCase):
     def test_catch_exception_on_invalid_record(self):
 
         # Arrange
-        dummy_file = io.StringIO()
+        dummy_file = io.BytesIO()
 
         avro_writer = AvroWriter(dummy_file, self.example_schema)
 
