@@ -6,13 +6,14 @@ DEPENDENCIES = [
 ]
 
 EXTRA_DEPENDENCIES = {
-    "avro": ["fastavro"],
-    "gcloud": ["google-cloud-storage==1.23.0"]
+    "avro": ["fastavro==0.22.7"],
+    "gcloud": ["google-cloud-storage==1.23.0"],
+    "all": ["fastavro==0.22.7", "google-cloud-storage==1.23.0"]
 }
 
 setuptools.setup(
     name='UDASwissKnife',
-    version='0.2.0',
+    version='0.3.0',
     description='Utils and common libraries for Python',
     author='UDARealState Data engineering Team',
     url='https://bitbucket.org/udanalytics/swissknife',

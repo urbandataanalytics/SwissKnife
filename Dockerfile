@@ -1,5 +1,8 @@
 FROM python:3.6.9-alpine
 
+## extra dependencies
+RUN apk update && apk add gcc musl-dev
+
 RUN mkdir project/ && cd project
 
 WORKDIR /project
@@ -11,7 +14,7 @@ COPY setup.py .
 COPY docker/entrypoint.sh .
 
 # Install all dependencies and the package itself
-RUN python setup.py install
+RUN pip install ".[all]"
 
 # Our entrypoint is the script launcher.sh
 ENTRYPOINT ["sh", "entrypoint.sh"]

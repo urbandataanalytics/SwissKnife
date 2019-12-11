@@ -34,7 +34,6 @@ directas con el enumerado:
 El valor es tomado de la variable de entorno "ENV" que puede tener los valores "pro", "pre", "dev" y "test". Se permite que el texto esté en 
 mayúscula total o parcialmente. Si dicha variable no existe o tiene un valor incorrecto, la aplicación devolverá un ExecutionEnvironment
 con el valor por defecto, *DEV*.
-# SwissKnife
 
 ## How to install
 
@@ -48,8 +47,13 @@ con el valor por defecto, *DEV*.
   ```
 - Install several extras. For example, _avro_ and _gcloud_:
   ```bash
-    pip install UDASwissKnife[avro][gcloud]
+    pip install UDASwissKnife[avro,gcloud]
   ```
+
+- Install all extras:
+```bash
+pip install UDASwissKnife[all]
+```
 
 ## Basic libraries
 

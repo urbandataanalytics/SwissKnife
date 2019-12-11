@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added AvroWriter class.
 - Added GCloudStreaming class.
+- Added **extras** requirements to install some dependencies.
 
 ## [0.2.0] - 2019-11-05
 ### Added
