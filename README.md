@@ -34,3 +34,28 @@ directas con el enumerado:
 El valor es tomado de la variable de entorno "ENV" que puede tener los valores "pro", "pre", "dev" y "test". Se permite que el texto esté en 
 mayúscula total o parcialmente. Si dicha variable no existe o tiene un valor incorrecto, la aplicación devolverá un ExecutionEnvironment
 con el valor por defecto, *DEV*.
+# SwissKnife
+
+## How to install
+
+- basic install:
+  ```bash
+    pip install UDASwissKnife
+  ```
+- Install with an extra. For example, _avro_:
+  ```bash
+    pip install UDASwissKnife[avro]
+  ```
+- Install several extras. For example, _avro_ and _gcloud_:
+  ```bash
+    pip install UDASwissKnife[avro][gcloud]
+  ```
+
+## Basic libraries
+
+    - info
+
+## Extra libraries
+
+    - avro: Includes AvroWriter.
+    - gcloud: Includes GCloudStreaming.
