@@ -13,7 +13,7 @@ EXTRA_DEPENDENCIES = {
 
 setuptools.setup(
     name='UDASwissKnife',
-    version='0.3.0',
+    version='0.3.1',
     description='Utils and common libraries for Python',
     author='UDARealState Data engineering Team',
     url='https://bitbucket.org/udanalytics/swissknife',

@@ -2,7 +2,7 @@ from google.auth.transport.requests import AuthorizedSession
 from google.resumable_media import requests, common
 from google.cloud import storage
 
-import logger
+import logging
 
 class GCloudStreaming(object):
     """
