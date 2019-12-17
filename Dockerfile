@@ -12,6 +12,7 @@ COPY SwissKnife/ ./SwissKnife
 COPY tests/ ./tests
 COPY setup.py .
 COPY docker/entrypoint.sh .
+COPY README.md .
 
 # Install all dependencies and the package itself
 RUN pip install ".[all]"
