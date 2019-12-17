@@ -1,4 +1,5 @@
 import setuptools
+from os import path
 
 DEPENDENCIES = [
     'coverage==4.5.4',
@@ -11,10 +12,15 @@ EXTRA_DEPENDENCIES = {
     "all": ["fastavro==0.22.7", "google-cloud-storage==1.23.0"]
 }
 
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setuptools.setup(
     name='UDASwissKnife',
     version='0.3.1',
     description='Utils and common libraries for Python',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='UDARealState Data engineering Team',
     url='https://bitbucket.org/udanalytics/swissknife',
     install_requires=DEPENDENCIES,
