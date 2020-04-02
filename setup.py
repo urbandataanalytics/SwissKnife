@@ -22,7 +22,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='UDARealState Data engineering Team',
-    url='https://bitbucket.org/udanalytics/swissknife',
+    url='https://github.com/urbandataanalytics/SwissKnife',
     install_requires=DEPENDENCIES,
     packages=setuptools.find_packages(),
     test_suite="nose.collector",
