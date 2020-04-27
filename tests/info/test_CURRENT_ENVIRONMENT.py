@@ -4,6 +4,7 @@ import imp
 
 import SwissKnife
 import SwissKnife.info
+import tests.info as test_utils
 
 class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
 
@@ -20,17 +21,20 @@ class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_pre())
 
+
     def test_is_dev(self):
 
         for env_value in ["dev", "DEV", "Dev", "DEv"]:
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_dev())
 
+
     def test_is_test(self):
 
         for env_value in ["test", "TEST", "TeSt", "TEst"]:
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_test())
+
 
     def test_invalid_values(self):
 
@@ -39,11 +43,5 @@ class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_dev())
 
 
-    
     def _set_current_env(self, env_str: str):
-        """
-            We have to set the variable and reimport the module
-            to set the CURRENT_ENVIRONMENT variable.
-        """
-        os.environ["ENV"] = env_str
-        imp.reload(SwissKnife.info)
+        test_utils.set_env_variable("ENV", env_str)
