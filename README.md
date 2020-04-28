@@ -3,64 +3,62 @@
 
 # SwissKnife
 
-Librería de utilidades y funcionalidades comunes creada por el equipo de Data Engineering de UDA Real Estate.
+Hey! Welcome to `SwissKnife`, a set of tools and functionalities built by the Data Engineering team at [@uDATech](https://twitter.com/uDAtech).
 
-## Dockerfile
+This library is born from an urge of having a common repo to gather some functions that are widely used accross our tools.
 
-El dockerfile está diseñado para ejecutar los tests (no tendria sentido dockerizar una librería). Ejecutando la imagen construída, obtendremos directamente el resultado de nosetests.xml por consola, de tal forma que si la queremos en un fichero, deberíamos hacer lo siguiente:
+Suggestions and contributions are more than welcome, always respecting our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+## Installation guide
+
+This repo is available to download via [PyPI](https://pypi.org/project/UDASwissKnife/) and it has different sets of functionalities that can be independently installed:
+
+- **Basic** set:
+  + Packages included:
+    + `info`
+  ```bash
+  pip install UDASwissKnife
+  ```
+
+- **Extended** set:
+  + Packages included:
+    + `avro`
+    + `gcloud`
+  ```bash
+  pip install UDASwissKnife[avro,gcloud]
+  ```
+
+- **Complete** set:
+  + Includes both _Basic_ and _Extended_ sets
+  ```bash
+  pip install UDASwissKnife[all]
+  ```
+
+## Using the modules
+
+### `info`
+The main goal of this module is to identify the environment in which we are currently working. This is done thanks to an environment variable `$ENV` which contains the name of the working environment. The accepted case insensitive values of this working environment are:
+
+The object `SwissKnife.info.CURRENT_ENVIRONMENT`, which is of type `ExecutionEnvironment`, an enum that contains the following entries:
+
+- `PRO`
+- `PRE`
+- `TEST`
+- `DEV` (default)
+
+Then, it's possible to know the working environment using a set of methods which return a boolean indicating whether we are in that environment or not:
+
+- `is_pro()`
+- `is_pre()`
+- `is_test()`
+- `is_dev()`
+
+It's also possible to obtain the working environment using object `SwissKnife.info.CURRENT_ENVIRONMENT`.
+
+## Why is there a Dockerfile?
+
+The one and only purpose of the `Dockerfile` is to execute the tests defined in the project. By building and running the Docker image, tests results will be printed in the terminal. If it's needed to save the result in a file, run:
 
 ```bash
 sudo docker run swissknife:latest > nosetests.xml
 ```
-
-## Cómo obtener el Entorno de Ejecución actual
-
-El objeto se encuentra localizado en **SwissKnife.info.CURRENT_ENVIRONMENT**. Devuelve un objeto del tipo *ExecutionEnvironment*.
-
-Dicho objeto se trata de un enumerado con los siguientes valores:
-
-- PRO  -> "preo"
-- PRE  -> "pre"
-- DEV  -> "dev"
-- TEST -> "test
-
-Adicionalmente, tiene los siguientes métodos que simplifican conocer cual entorno de ejecución es sin tener que hacer comparaciones
-directas con el enumerado:
-
-- is_pro()  -> bool
-- is_pre()  -> bool
-- is_dev()  -> bool
-- is_test() -> bool
-
-El valor es tomado de la variable de entorno "ENV" que puede tener los valores "pro", "pre", "dev" y "test". Se permite que el texto esté en 
-mayúscula total o parcialmente. Si dicha variable no existe o tiene un valor incorrecto, la aplicación devolverá un ExecutionEnvironment
-con el valor por defecto, *DEV*.
-
-## How to install
-
-- basic install:
-  ```bash
-    pip install UDASwissKnife
-  ```
-- Install with an extra. For example, _avro_:
-  ```bash
-    pip install UDASwissKnife[avro]
-  ```
-- Install several extras. For example, _avro_ and _gcloud_:
-  ```bash
-    pip install UDASwissKnife[avro,gcloud]
-  ```
-
-- Install all extras:
-```bash
-pip install UDASwissKnife[all]
-```
-
-## Basic libraries
-
-    - info
-
-## Extra libraries
-
-    - avro: Includes AvroWriter.
-    - gcloud: Includes GCloudStreaming.
