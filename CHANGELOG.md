@@ -6,19 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2020-04-28
+### Added
+- Code of Conduct document.
+- Issue templates.
+- Contributor Covenant badge.
+- Variable `BUCKET_PATH` used to identify the value of an environmental variable.
+- Revamped tests to remove duplicated code.
+### Changed
+- Translated to English and updated `README.md`.
+- Reduced complexity in some parts of the code.
+
 ## [0.3.2] - 2020-04-02
 ### Changed
-- Change project location to github.
-- Removed Inaccessible Jenkins pill.
--   
+- Changed project location to github.
+- Removed inaccessible Jenkins pill.
+
 ## [0.3.1] - 2019-12-17
 ### Fixed
-- Remove import of "logger" and added import of "logging" in GCloudStreaming 
+- Remove import of `logger` and added import of `logging` in `GCloudStreaming `.
 
 ## [0.3.0] - 2019-12-11
 ### Added
-- Added AvroWriter class.
-- Added GCloudStreaming class.
+- Added `AvroWriter` class.
+- Added `GCloudStreaming` class.
 - Added **extras** requirements to install some dependencies.
 
 ## [0.2.0] - 2019-11-05
@@ -28,14 +39,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2019-11-04
 ### Added
 - Specific version of the project dependencies.
-  
 ### Changed
 - `ExecutionEnvironment` default value set to **DEV**.
 - Fixed some typos in the code.
-- Change package name to *UDASwissKnife* to avoid conflicts in pipy repository.
-  
+- Change package name to `UDASwissKnife` to avoid conflicts in pipy repository.
 
 ## [0.1.0] - 2019-10-31
 ### Added
-- ExecutionEnvironment object.
-- CURRENT_ENVIRONMENT variable (located in SwissKnife.info.CURRENT_ENVIRONMENT) that return a ExecutionEnvironment with the current environment setted.
+- `ExecutionEnvironment` object.
+- `CURRENT_ENVIRONMENT` variable (located in `SwissKnife.info.CURRENT_ENVIRONMENT`) that return a ExecutionEnvironment with the current environment setted.
