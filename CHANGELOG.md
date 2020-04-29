@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Environmental variable `BUCKET_PATH` now is divided into `BUCKET_NAME` and `BUCKET_PREFIX` to distinguish the bucket name from an specific path inside that bucket.
 
 ## [0.4.1] - 2020-04-28
-## Changed
+### Changed
 - Bumped version to 0.4.1 to fix a version problem in PyPI.
 
 ## [0.4.0] - 2020-04-28
