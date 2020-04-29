@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2020-04-29
+### Changed
+- Environmental variable `BUCKET_PATH` now is divided into `BUCKET_NAME` and `BUCKET_PATH_PREFIX` to distinguish the bucket name from an specific path inside that bucket.
+
 ## [0.4.1] - 2020-04-28
-## Changed
+### Changed
 - Bumped version to 0.4.1 to fix a version problem in PyPI.
 
 ## [0.4.0] - 2020-04-28
@@ -43,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2019-11-04
 ### Added
 - Specific version of the project dependencies.
-### Changed
+### Chang ed
 - `ExecutionEnvironment` default value set to **DEV**.
 - Fixed some typos in the code.
 - Change package name to `UDASwissKnife` to avoid conflicts in pipy repository.
