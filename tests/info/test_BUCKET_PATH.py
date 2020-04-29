@@ -19,7 +19,7 @@ class Test_BUCKET_PATH(unittest.TestCase):
         test_utils.set_env_variable("BUCKET_PATH", full_bucket_path)
         
         self.assertEqual(bucket_name, SwissKnife.info.BUCKET_NAME)
-        self.assertEqual(path_preffix, SwissKnife.info.BUCKET_PREFIX)
+        self.assertEqual(path_preffix, SwissKnife.info.BUCKET_PATH_PREFIX)
 
 
     def test_is_defined_without_preffix(self):
@@ -33,7 +33,7 @@ class Test_BUCKET_PATH(unittest.TestCase):
         test_utils.set_env_variable("BUCKET_PATH", full_bucket_path)
         
         self.assertEqual(bucket_name, SwissKnife.info.BUCKET_NAME)
-        self.assertEqual(path_preffix, SwissKnife.info.BUCKET_PREFIX)
+        self.assertEqual(path_preffix, SwissKnife.info.BUCKET_PATH_PREFIX)
 
 
     def test_not_defined(self):
@@ -42,4 +42,4 @@ class Test_BUCKET_PATH(unittest.TestCase):
         """
         test_utils.delete_env_variable("BUCKET_PATH")
         self.assertEqual("", SwissKnife.info.BUCKET_NAME)
-        self.assertEqual("", SwissKnife.info.BUCKET_PREFIX)
+        self.assertEqual("", SwissKnife.info.BUCKET_PATH_PREFIX)
