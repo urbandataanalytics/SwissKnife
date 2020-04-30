@@ -17,7 +17,8 @@ class GCloudStorage:
         :param logger: Logger object to use, defaults to logging.getLogger("GCloudStorage")
         :type logger: logging.Logger, optional
         """
-        logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
+        self.logger = logger
+        self.logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
         
