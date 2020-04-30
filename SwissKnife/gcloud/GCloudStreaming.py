@@ -78,7 +78,7 @@ class GCloudStreaming(object):
     def start(self):
         """Start of the object (it connects to Google Storage).
         """
-        full_path = GCloudStorage.get_storage_complete_file_path(self.blob_name, with_bucket=True, with_gs=True)
+        full_path = GCloudStorage.get_storage_complete_file_path(self.blob_name, with_bucket=True, with_gs=True, with_prefix=False)
         self.logger.info(f'Uploaded file to gcloud (streaming) path {full_path}')
 
         self._client = storage.Client()

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2020-04-30
+### Changed
+- Fixed bug which caused GCloudStreaming files to have twice the bucket prefix.
+
 ## [0.5.1] - 2020-04-30
 ### Added
 - Add option to prepend "gs://" to storage paths
