@@ -5,10 +5,10 @@ import google.cloud.storage as gcloud
 from SwissKnife.info import BUCKET_NAME, BUCKET_PATH_PREFIX
 
 
-class GcloudStorage:
+class GCloudStorage:
 
     def __init__(self, logger: logging.Logger = logging.getLogger("GCloudStorage")):
-        """Creates a new GcloudStorage object. To do so, it's needed
+        """Creates a new GCloudStorage object. To do so, it's needed
         to have an environmental variable GOOGLE_APPLICATION_CREDENTIALS
         which contains the path of the SA that will be used for authentication.
         It's also a must to have an active Internet connection, otherwise the
@@ -17,7 +17,7 @@ class GcloudStorage:
         :param logger: Logger object to use, defaults to logging.getLogger("GCloudStorage")
         :type logger: logging.Logger, optional
         """
-        logger.infof(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
+        logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
         
@@ -123,8 +123,8 @@ class GcloudStorage:
             
         return blob
     
-    def get_storage_complete_file_path(self,
-                                       file_path: str,
+    @staticmethod
+    def get_storage_complete_file_path(file_path: str,
                                        file_name: str,
                                        with_bucket: bool=False,
                                        with_prefix: bool=True) -> str:
@@ -142,9 +142,9 @@ class GcloudStorage:
         :rtype: str
         """
         bucket_name = f'{BUCKET_NAME}/' if with_bucket else ''
-        file_prefix = f'{BUCKET_PATH_PREFIX}/' if with_prefix else ''
+        file_prefix = f'{BUCKET_PATH_PREFIX}/' if with_prefix and BUCKET_PATH_PREFIX else ''
         
-        return f'{bucket_name}{file_prefix}{file_path}{file_name}'
+        return f'{bucket_name}{file_prefix}{file_path}/{file_name}'
 
     def list_blobs(self, storage_path: str):
         """Lists all the files that exists in the specified path.
