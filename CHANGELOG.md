@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2020-04-30
+### Added
+- Class `GCloudStorage` inside of module `gcloud`, used to upload files and strings to a gcloud bucket.
+- `Makefile` to build and push the library to our PyPI repo.
+### Changed
+- Moved test_utils to a higher level folder, to allow access from any test class.
+
 ## [0.4.2] - 2020-04-29
 ### Changed
 - Environmental variable `BUCKET_PATH` now is divided into `BUCKET_NAME` and `BUCKET_PATH_PREFIX` to distinguish the bucket name from an specific path inside that bucket.
