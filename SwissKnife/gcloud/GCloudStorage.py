@@ -41,12 +41,12 @@ class GCloudStorage:
         :return: Storage path were the file has been uploaded
         :rtype: str
         """
-        return self.__save_to_storage(data=origin_local_path,
-                                      data_encoding=encoding,
-                                      data_type='file',
-                                      destionation_storage_path=destination_storage_path,
-                                      destionation_file_name=destination_file_name
-                                      )
+        return self.save_to_storage(data=origin_local_path,
+                                    data_encoding=encoding,
+                                    data_type='file',
+                                    destination_storage_path=destination_storage_path,
+                                    destination_file_name=destination_file_name
+                                    )
 
     def save_string(self,
                     origin_data_str: str,
@@ -67,19 +67,19 @@ class GCloudStorage:
         :return: Storage path were the file has been uploaded
         :rtype: str
         """
-        return self.__save_to_storage(data=origin_data_str,
-                                      data_encoding=encoding,
-                                      data_type='str',
-                                      destionation_storage_path=destination_file_name,
-                                      destionation_file_name=destination_storage_path
-                                      )
+        return self.save_to_storage(data=origin_data_str,
+                                    data_encoding=encoding,
+                                    data_type='str',
+                                    destination_storage_path=destination_storage_path,
+                                    destination_file_name=destination_file_name
+                                    )
     
-    def __save_to_storage(self,
-                          data,
-                          data_encoding: str,
-                          data_type: str,
-                          destionation_storage_path: str,
-                          destionation_file_name: str) -> str:
+    def save_to_storage(self,
+                        data,
+                        data_encoding: str,
+                        data_type: str,
+                        destination_storage_path: str,
+                        destination_file_name: str) -> str:
         """Uploads data, which may come in several formats, to
         Storage. Accepted data types are 'file' and 'str', matching
         methods save_file and save_string of this same class.
@@ -90,10 +90,10 @@ class GCloudStorage:
         :type data_encoding: str
         :param data_type: Type of data to upload: file or string
         :type data_type: str
-        :param destionation_storage_path: Storage path were it'll be stored
-        :type destionation_storage_path: str
-        :param destionation_file_name: Name that it will have in Storage
-        :type destionation_file_name: str
+        :param destination_storage_path: Storage path were it'll be stored
+        :type destination_storage_path: str
+        :param destination_file_name: Name that it will have in Storage
+        :type destination_file_name: str
         :raises NotImplementedError: When the data type provided is not implemented
         :return: gcloud storage of the uploaded file
         :rtype: str
