@@ -99,9 +99,9 @@ class GCloudStorage:
         """
         blob = self.__generate_blob(destionation_storage_path, destionation_file_name, data_encoding)
         
-        if type == 'str':
+        if data_type == 'str':
             blob.upload_from_string(data)
-        elif type == 'file':
+        elif data_type == 'file':
             blob.upload_from_filename(data)
         else:
             raise NotImplementedError

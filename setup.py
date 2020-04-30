@@ -17,7 +17,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name='UDASwissKnife',
-    version='0.5.0',
+    version='0.5.1',
     description='Utils and common libraries for Python',
     long_description=long_description,
     long_description_content_type='text/markdown',
