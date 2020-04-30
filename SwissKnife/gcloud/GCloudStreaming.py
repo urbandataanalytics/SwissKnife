@@ -21,7 +21,8 @@ class GCloudStreaming(object):
             self,
             blob_name: str,
             chunk_size: int=256 * 1024, # 256 Kb Todo To Be Tuned
-            logger: logging.Logger=logging.getLogger("GCloudStreaming")
+            logger: logging.Logger=logging.getLogger("GCloudStreaming"),
+            bucket_name: str = None
         ):
         """The constructor of a GCloudStreaming object
         
@@ -31,9 +32,12 @@ class GCloudStreaming(object):
         :type chunk_size: int, optional,
         :param logger: A custom logger.
         :type logger: logging.Logger
+        :param bucket_name: If it's not desired to use BUCKET_PATH to determine the
+                            bucket name, then set the bucket name using this variable.
+        :type bucket_name: str
         """
 
-        self.bucket_name = BUCKET_NAME
+        self.bucket_name = bucket_name if bucket_name else BUCKET_NAME
         self.blob_name = GCloudStorage.get_storage_complete_file_path(blob_name, with_gs=False)
         self.chunk_size = chunk_size
 
