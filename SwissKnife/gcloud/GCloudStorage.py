@@ -114,7 +114,20 @@ class GCloudStorage:
     def __generate_blob(self, 
                         file_path: str,
                         file_name: str,
-                        encoding: str):
+                        encoding: str) -> gcloud.blob.Blob:
+        """Creates a new Blob with the specified path and name.
+        Before uploading a file to gcloud it is needed to first
+        generate a Blob containing basic info such as name and encoding.
+
+        :param file_path: Gcloud Storage path of the blob
+        :type file_path: str
+        :param file_name: Name of the blob in Storage
+        :type file_name: str
+        :param encoding: Encoding of the file
+        :type encoding: str
+        :return: Blob object with updated metadata
+        :rtype: google.cloud.storage.blob.Blob
+        """
         blob_name = self.get_storage_complete_file_path(file_path, file_name)
         blob = self.bucket.blob(blob_name)
         
@@ -146,7 +159,7 @@ class GCloudStorage:
         
         return f'{bucket_name}{file_prefix}{file_path}/{file_name}'
 
-    def list_blobs(self, storage_path: str):
+    def list_blobs(self, storage_path: str) -> "Iterator":
         """Lists all the files that exists in the specified path.
         This is similar to GNU's `ls` command. Returns an iterator
         that should be treated later on.
@@ -154,6 +167,6 @@ class GCloudStorage:
         :param storage_path: Parent path from which files will be listed
         :type storage_path: str
         :return: Iterator with blobs contained in the parent path
-        :rtype: [type]
+        :rtype: "Iterator"
         """
         return self.bucket.list_blobs(prefix=storage_path)
