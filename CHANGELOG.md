@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.5.1] - 2020-04-30
+### Added
+- Add option to prepend "gs://" to storage paths
+-  Modified `GCloudStreaming` to automatically detect bucket name 
 ### Changed
 - Fixed incorrect variable name in GCloudStorage class
+- Fixed wrong reference to logger
+- Allow empty paths when building storage paths
 
 ## [0.5.0] - 2020-04-30
 ### Added
