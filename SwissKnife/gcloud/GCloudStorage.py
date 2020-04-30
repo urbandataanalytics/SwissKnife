@@ -17,7 +17,8 @@ class GCloudStorage:
         :param logger: Logger object to use, defaults to logging.getLogger("GCloudStorage")
         :type logger: logging.Logger, optional
         """
-        logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
+        self.logger = logger
+        self.logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
         
@@ -40,12 +41,12 @@ class GCloudStorage:
         :return: Storage path were the file has been uploaded
         :rtype: str
         """
-        return self.__save_to_storage(data=origin_local_path,
-                                      data_encoding=encoding,
-                                      data_type='file',
-                                      destionation_storage_path=destination_storage_path,
-                                      destionation_file_name=destination_file_name
-                                      )
+        return self.save_to_storage(data=origin_local_path,
+                                    data_encoding=encoding,
+                                    data_type='file',
+                                    destination_storage_path=destination_storage_path,
+                                    destination_file_name=destination_file_name
+                                    )
 
     def save_string(self,
                     origin_data_str: str,
@@ -66,19 +67,19 @@ class GCloudStorage:
         :return: Storage path were the file has been uploaded
         :rtype: str
         """
-        return self.__save_to_storage(data=origin_data_str,
-                                      data_encoding=encoding,
-                                      data_type='str',
-                                      destionation_storage_path=destination_file_name,
-                                      destionation_file_name=destination_storage_path
-                                      )
+        return self.save_to_storage(data=origin_data_str,
+                                    data_encoding=encoding,
+                                    data_type='str',
+                                    destination_storage_path=destination_storage_path,
+                                    destination_file_name=destination_file_name
+                                    )
     
-    def __save_to_storage(self,
-                          data,
-                          data_encoding: str,
-                          data_type: str,
-                          destionation_storage_path: str,
-                          destionation_file_name: str) -> str:
+    def save_to_storage(self,
+                        data,
+                        data_encoding: str,
+                        data_type: str,
+                        destination_storage_path: str,
+                        destination_file_name: str) -> str:
         """Uploads data, which may come in several formats, to
         Storage. Accepted data types are 'file' and 'str', matching
         methods save_file and save_string of this same class.
@@ -89,24 +90,24 @@ class GCloudStorage:
         :type data_encoding: str
         :param data_type: Type of data to upload: file or string
         :type data_type: str
-        :param destionation_storage_path: Storage path were it'll be stored
-        :type destionation_storage_path: str
-        :param destionation_file_name: Name that it will have in Storage
-        :type destionation_file_name: str
+        :param destination_storage_path: Storage path were it'll be stored
+        :type destination_storage_path: str
+        :param destination_file_name: Name that it will have in Storage
+        :type destination_file_name: str
         :raises NotImplementedError: When the data type provided is not implemented
         :return: gcloud storage of the uploaded file
         :rtype: str
         """
-        blob = self.__generate_blob(destionation_storage_path, destionation_file_name, data_encoding)
+        blob = self.__generate_blob(destination_storage_path, destination_file_name, data_encoding)
         
-        if type == 'str':
+        if data_type == 'str':
             blob.upload_from_string(data)
-        elif type == 'file':
+        elif data_type == 'file':
             blob.upload_from_filename(data)
         else:
             raise NotImplementedError
         
-        file_path = self._get_storage_file_path(destionation_storage_path, destionation_file_name, with_bucket=True)
+        file_path = self.get_storage_complete_file_path(destination_file_name, destination_storage_path, with_bucket=True)
         
         self.logger.info(f"Uploaded file to gcloud path {file_path}")
         return file_path
@@ -128,19 +129,20 @@ class GCloudStorage:
         :return: Blob object with updated metadata
         :rtype: google.cloud.storage.blob.Blob
         """
-        blob_name = self.get_storage_complete_file_path(file_path, file_name)
+        blob_name = self.get_storage_complete_file_path(file_name, file_path, with_gs=False)
         blob = self.bucket.blob(blob_name)
         
         if encoding:
-            blob.content_encoding = 'gzip'
+            blob.content_encoding = encoding
             
         return blob
     
     @staticmethod
-    def get_storage_complete_file_path(file_path: str,
-                                       file_name: str,
+    def get_storage_complete_file_path(file_name: str,
+                                       file_path: str=None,
                                        with_bucket: bool=False,
-                                       with_prefix: bool=True) -> str:
+                                       with_prefix: bool=True,
+                                       with_gs: bool=True) -> str:
         """Returns the complete path of a file stored in gcloud.
 
         :param file_path: Path of the file, without bucket
@@ -151,13 +153,17 @@ class GCloudStorage:
         :type with_bucket: bool, optional
         :param with_prefix: If prefix set by BUCKET_PATH_PREFIX is used, defaults to True
         :type with_prefix: bool, optional
+        :param with_gs: If the string gs:// should be added to the path or not
+        :type with_gs: bool, optional, True by default
         :return: Complete path of a file stored in gcloud
         :rtype: str
         """
         bucket_name = f'{BUCKET_NAME}/' if with_bucket else ''
         file_prefix = f'{BUCKET_PATH_PREFIX}/' if with_prefix and BUCKET_PATH_PREFIX else ''
+        path = f'{file_path}/' if file_path else ''
+        gs_prefix = 'gs://' if with_gs else ''
         
-        return f'{bucket_name}{file_prefix}{file_path}/{file_name}'
+        return f'{gs_prefix}{bucket_name}{file_prefix}{path}{file_name}'
 
     def list_blobs(self, storage_path: str) -> "Iterator":
         """Lists all the files that exists in the specified path.

@@ -1,8 +1,11 @@
-from google.auth.transport.requests import AuthorizedSession
-from google.resumable_media import requests, common
-from google.cloud import storage
-
 import logging
+
+from google.cloud import storage
+from SwissKnife.info import BUCKET_NAME
+from google.resumable_media import requests, common
+from google.auth.transport.requests import AuthorizedSession
+from SwissKnife.gcloud.GCloudStorage import GCloudStorage
+
 
 class GCloudStreaming(object):
     """
@@ -11,30 +14,31 @@ class GCloudStreaming(object):
 
     Upload using a classic "write" function:
     
-        with GCloudStreaming(bucket_name='bucket', blob_name='blob') as s:
+        with GCloudStreaming(blob_name='blob') as s:
             s.write(<DATOS>)
     """
     def __init__(
             self,
-            bucket_name: str,
             blob_name: str,
             chunk_size: int=256 * 1024, # 256 Kb Todo To Be Tuned
-            logger: logging.Logger=logging.getLogger("GCloudStreaming")
+            logger: logging.Logger=logging.getLogger("GCloudStreaming"),
+            bucket_name: str = None
         ):
         """The constructor of a GCloudStreaming object
         
-        :param bucket_name: The bucket name in Google Storage.
-        :type bucket_name: str
         :param blob_name: The blob path inside the bucket in Google Storage.
         :type blob_name: str
         :param chunk_size: The size of each chunk of data, defaults to 256*1024
         :type chunk_size: int, optional,
         :param logger: A custom logger.
         :type logger: logging.Logger
+        :param bucket_name: If it's not desired to use BUCKET_PATH to determine the
+                            bucket name, then set the bucket name using this variable.
+        :type bucket_name: str
         """
 
-        self.bucket_name = bucket_name
-        self.blob_name = blob_name
+        self.bucket_name = bucket_name if bucket_name else BUCKET_NAME
+        self.blob_name = GCloudStorage.get_storage_complete_file_path(blob_name, with_gs=False)
         self.chunk_size = chunk_size
 
         self._client = None
@@ -74,7 +78,8 @@ class GCloudStreaming(object):
     def start(self):
         """Start of the object (it connects to Google Storage).
         """
-        self.logger.info("Processing and uploading to GC Storage file: {0}".format(self.blob_name))
+        full_path = GCloudStorage.get_storage_complete_file_path(self.blob_name, with_bucket=True, with_gs=True)
+        self.logger.info(f'Uploaded file to gcloud (streaming) path {full_path}')
 
         self._client = storage.Client()
         self._bucket = self._client.bucket(self.bucket_name)
