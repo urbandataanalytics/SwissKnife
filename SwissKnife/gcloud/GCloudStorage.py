@@ -141,7 +141,8 @@ class GCloudStorage:
     def get_storage_complete_file_path(file_path: str,
                                        file_name: str,
                                        with_bucket: bool=False,
-                                       with_prefix: bool=True) -> str:
+                                       with_prefix: bool=True,
+                                       with_gs: bool=True) -> str:
         """Returns the complete path of a file stored in gcloud.
 
         :param file_path: Path of the file, without bucket
@@ -152,13 +153,17 @@ class GCloudStorage:
         :type with_bucket: bool, optional
         :param with_prefix: If prefix set by BUCKET_PATH_PREFIX is used, defaults to True
         :type with_prefix: bool, optional
+        :param with_gs: If the string gs:// should be added to the path or not
+        :type with_gs: bool, optional, True by default
         :return: Complete path of a file stored in gcloud
         :rtype: str
         """
         bucket_name = f'{BUCKET_NAME}/' if with_bucket else ''
         file_prefix = f'{BUCKET_PATH_PREFIX}/' if with_prefix and BUCKET_PATH_PREFIX else ''
+        path = f'{file_path}/' if file_path else ''
+        gs_prefix = 'gs://' if with_gs else ''
         
-        return f'{bucket_name}{file_prefix}{file_path}/{file_name}'
+        return f'{gs_prefix}{bucket_name}{file_prefix}{path}{file_name}'
 
     def list_blobs(self, storage_path: str) -> "Iterator":
         """Lists all the files that exists in the specified path.
