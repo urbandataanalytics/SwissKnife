@@ -4,7 +4,7 @@ import imp
 
 import SwissKnife
 import SwissKnife.info
-import tests.info as test_utils
+import tests.test_utils as test_utils
 
 class Test_BUCKET_PATH(unittest.TestCase):
     
