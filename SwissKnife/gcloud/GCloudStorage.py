@@ -98,7 +98,7 @@ class GCloudStorage:
         :return: gcloud storage of the uploaded file
         :rtype: str
         """
-        blob = self.__generate_blob(destionation_storage_path, destionation_file_name, data_encoding)
+        blob = self.__generate_blob(destination_storage_path, destination_file_name, data_encoding)
         
         if data_type == 'str':
             blob.upload_from_string(data)
@@ -107,7 +107,7 @@ class GCloudStorage:
         else:
             raise NotImplementedError
         
-        file_path = self._get_storage_file_path(destionation_storage_path, destionation_file_name, with_bucket=True)
+        file_path = self.get_storage_complete_file_path(destination_file_name, destination_storage_path, with_bucket=True)
         
         self.logger.info(f"Uploaded file to gcloud path {file_path}")
         return file_path
@@ -129,17 +129,17 @@ class GCloudStorage:
         :return: Blob object with updated metadata
         :rtype: google.cloud.storage.blob.Blob
         """
-        blob_name = self.get_storage_complete_file_path(file_path, file_name)
+        blob_name = self.get_storage_complete_file_path(file_name, file_path, with_gs=False)
         blob = self.bucket.blob(blob_name)
         
         if encoding:
-            blob.content_encoding = 'gzip'
+            blob.content_encoding = encoding
             
         return blob
     
     @staticmethod
-    def get_storage_complete_file_path(file_path: str,
-                                       file_name: str,
+    def get_storage_complete_file_path(file_name: str,
+                                       file_path: str=None,
                                        with_bucket: bool=False,
                                        with_prefix: bool=True,
                                        with_gs: bool=True) -> str:
