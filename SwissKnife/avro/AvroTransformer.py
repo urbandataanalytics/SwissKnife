@@ -242,7 +242,7 @@ class AvroTransformer(object):
     def _get_casted_value(key: str, value: object, cast_dict: dict) -> object:
         types_list = cast_dict[key]
         for type_to_cast in types_list:
-            if type_to_cast == "null" or value is None:
+            if type_to_cast == "null" and value is None:
                 return None
             elif type_to_cast in ["int", "long"]:
                 # if empty string

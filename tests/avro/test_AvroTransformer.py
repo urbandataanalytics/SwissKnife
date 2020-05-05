@@ -129,7 +129,7 @@ class AvroTransformerTest(unittest.TestCase):
             "date": "123456789"
         }
 
-        example_record_2 = {
+        example_record_default = {
             "url": "http://google.com",
             "code": None,
             "isReady": False,
@@ -147,8 +147,8 @@ class AvroTransformerTest(unittest.TestCase):
                 "startDate": None
             }
         )
-        with self.assertRaises(RuntimeError) as context:
-            avro_transformer.get_record_with_defaults(example_record_2)
+        with self.assertRaises(RuntimeError):
+            avro_transformer.get_record_with_defaults(example_record_default)
 
     def test_apply_all_transforms(self):
         example_record = {
