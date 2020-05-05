@@ -1,6 +1,7 @@
-import unittest
 import os
 import imp
+import json
+import unittest
 
 import SwissKnife
 import SwissKnife.info
@@ -41,6 +42,12 @@ class Test_CURRENT_ENVIRONMENT(unittest.TestCase):
         for env_value in ["prU", "PRA", "asdfsdf", "unknown"]:
             self._set_current_env(env_value)
             self.assertTrue(SwissKnife.info.CURRENT_ENVIRONMENT.is_dev())
+            
+    def test_is_json_serializable(self):
+        self._set_current_env('TEST')
+        expected = '"test"'
+        actual = json.dumps(SwissKnife.info.CURRENT_ENVIRONMENT)
+        self.assertEqual(expected, actual)
 
 
     def _set_current_env(self, env_str: str):

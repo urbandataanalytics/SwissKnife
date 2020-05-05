@@ -1,18 +1,22 @@
 from enum import Enum
 
 
-class ExecutionEnvironment(Enum):
+class ExecutionEnvironment(str, Enum):
     """ExutionEnvironment is an Enum that represents a possible ExecutionEnvironment.
     Valid values are PRO, PRE, DEV and TEST. DEV is the default value.
     The static method "create" is the preferred method to create an ExecutionEnvironment because
     it transforms the input to a standard form (lower case). It will return the default value (DEV)
     if an invalid value (or a null value) is provided. 
+    
+    By inhereting both str and Enum we automatically make our enumeration
+    JSON serlizable. It's also needed to annotate the type of the enum
+    values.
     """
 
-    PRO = "pro"
-    PRE = "pre"
-    DEV = "dev"
-    TEST = "test"
+    PRO: str = "pro"
+    PRE: str = "pre"
+    DEV: str = "dev"
+    TEST: str = "test"
     
     @staticmethod
     def create(env_str: str) -> "ExecutionEnvironment":
