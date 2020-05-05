@@ -1,9 +1,6 @@
 import re
 from typing import Callable
-from typing import Dict
-
-# The type of each record file.
-Record = Dict[str, object]
+from avro.types import Record, Variables
 
 
 class NoDefault(object):
@@ -116,6 +113,7 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_rename_dict(schema: dict) -> dict:
+        # todo review this description
         """Creates a dict that maps a name with the correct one.
         :param schema: The provided schema.
         :type schema: dict
@@ -125,13 +123,13 @@ class AvroTransformer(object):
         """
 
         rename_dict = {}
-        for field in schema["fields"]:
-            field_name = field["name"]
+        for field in schema[Variables.FIELDS]:
+            field_name = field[Variables.NAME]
             # Rename field_name to itselft
             rename_dict[field_name] = field_name
             # rename aliases
-            if "aliases" in field:
-                for alias in field["aliases"]:
+            if Variables.ALIASES in field:
+                for alias in field[Variables.ALIASES]:
                     rename_dict[alias] = field_name
         return rename_dict
 
@@ -145,19 +143,19 @@ class AvroTransformer(object):
         :rtype: dict
         """
         transform_dict = {}
-        for field in schema["fields"]:
-            if "transform" in field:
-                field_name = field["name"]
-                transform_name = field["transform"]
+        for field in schema[Variables.FIELDS]:
+            if Variables.TRANSFORM in field:
+                field_name = field[Variables.NAME]
+                transform_name = field[Variables.TRANSFORM]
                 transform_dict[field_name] = AvroTransformer._get_transform_function(transform_name)
         return transform_dict
 
     @staticmethod
     def _create_cast_dict(schema: dict) -> dict:
         cast_dict = {}
-        for field in schema["fields"]:
-            field_name = field["name"]
-            types_list = field["type"]
+        for field in schema[Variables.FIELDS]:
+            field_name = field[Variables.NAME]
+            types_list = field[Variables.TYPE]
             cast_dict[field_name] = types_list
         return cast_dict
 
@@ -171,10 +169,10 @@ class AvroTransformer(object):
         """
 
         defaults_dict = {}
-        for field in schema["fields"]:
-            field_name = field["name"]
-            if "default" in field:
-                defaults_value = field["default"]
+        for field in schema[Variables.FIELDS]:
+            field_name = field[Variables.NAME]
+            if Variables.DEFAULT in field:
+                defaults_value = field[Variables.DEFAULT]
                 defaults_dict[field_name] = defaults_value
             else:
                 defaults_dict[field_name] = NoDefault
