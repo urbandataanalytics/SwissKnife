@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2020-05-05
+### Added
+- Incubating AvroTransformer in SwissKnife 
+
 ## [0.5.2] - 2020-04-30
 ### Changed
 - Fixed bug which caused GCloudStreaming files to have twice the bucket prefix.
