@@ -80,7 +80,7 @@ class AvroTransformer(object):
     def get_record_with_defaults(self, record: Record) -> Record:
         """Creates a new record from an existing one. Empty fields are filled with its default value,
         defined in the loaded schema. If an empty field does not have a default value, then an
-        exception will arise.
+        exception will rise.
         :param record: The input record.
         :type record: Record
         :raises RuntimeError: When a field empty and has not default value.
