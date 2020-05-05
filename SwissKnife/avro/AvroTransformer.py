@@ -90,7 +90,7 @@ class AvroTransformer(object):
         new_record = {}
         for key, defaults_value in self.defaults_dict.items():
             if key not in record and defaults_value is NoDefault:
-                raise RuntimeError(f"Required  {key} not in record {record}")
+                raise RuntimeError(f"Required {key} not in record {record}")
             elif key not in record and defaults_value is not NoDefault:
                 new_record[key] = defaults_value
             else:
