@@ -57,8 +57,7 @@ class AvroTransformer(object):
         renamed_record = self.get_renamed_record_and_remove_invalid_fields(record)
         transformed_record = self.get_transformed_record(renamed_record)
         record_with_defaults = self.get_record_with_defaults(transformed_record)
-        record_with_casted_values = self.get_record_with_casted_values(record_with_defaults)
-        return record_with_casted_values
+        return self.get_record_with_casted_values(record_with_defaults)
 
     def get_renamed_record_and_remove_invalid_fields(self, record: Record) -> Record:
         """Transforms a record to another one with correct names: If a field of the record
@@ -79,10 +78,9 @@ class AvroTransformer(object):
         return new_record
 
     def get_record_with_defaults(self, record: Record) -> Record:
-        """Transforms a record no a new one where empty field will
-           be filled with its default value.
-           If a field is empty and has not default value,
-           the function will raise an exception.
+        """Creates a new record from an existing one. Empty fields are filled with its default value,
+        defined in the loaded schema. If an empty field does not have a default value, then an
+        exception will arise.
         :param record: The input record.
         :type record: Record
         :raises RuntimeError: When a field empty and has not default value.
