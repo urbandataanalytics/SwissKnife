@@ -152,6 +152,7 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_cast_dict(schema: dict) -> dict:
+        # todo doc
         cast_dict = {}
         for field in schema[Variables.FIELDS]:
             field_name = field[Variables.NAME]
@@ -180,18 +181,17 @@ class AvroTransformer(object):
 
     @staticmethod
     def _get_transform_function(transform_name: str) -> Callable[[object, dict], object]:
-        """Gets a transform function from a transform_name. This purpose of this function
+        """Gets a transform function from a transform_name. The purpose of this function
         is transform the current value of a field to another one (for example, an available
         value for the field type).
-        transform_name can be directly the name of a function or it can be
-        a expresion, so the result will be a closure. For example,
-        "copyFrom(date)" refers to function "copyFrom" whith the parameter "date".
+        transform_name could be the name of a function or an expression, so the result will always be a closure.
+        For example, "copyFrom(date)" refers to function "copyFrom" whith the parameter "date".
         The returned function has two parameters:
             - value: The current value of the field.
             - record: The entire record.
 
         Available functions:
-            - int2boolean: Transform a int to a bolean. True if x > 0, otherwise False.
+            - int2boolean: Transform an int to a boolean. True if x > 0, otherwise False.
             - copyFrom(y): Return the value of field Y. So, the current value of the
                            target field is ignored.
 
@@ -223,6 +223,7 @@ class AvroTransformer(object):
             selected_function = copyFrom
         # If there is not an available function, raise Exception
         if selected_function is None:
+            # todo Maybe the exception message could contain more info to help debug the issue, such as the value of copied_field or the available fields in the record
             raise RuntimeError("Invalid name for a transform function")
         return selected_function
 
@@ -232,6 +233,7 @@ class AvroTransformer(object):
             try:
                 casted_value = self._get_casted_value(key, value, self.cast_dict)
             except Exception as ex:
+                # todo Same here, I'd print the name that was given
                 raise ValueError(f"In the record {record} the next error {ex} in the field {key} with value {value}")
             new_record[key] = casted_value
         return new_record
@@ -240,7 +242,7 @@ class AvroTransformer(object):
     def _get_casted_value(key: str, value: object, cast_dict: dict) -> object:
         types_list = cast_dict[key]
         for type_to_cast in types_list:
-            if type_to_cast == "null" and value is None:
+            if type_to_cast == "null" or value is None:
                 return None
             elif type_to_cast in ["int", "long"]:
                 # if empty string
