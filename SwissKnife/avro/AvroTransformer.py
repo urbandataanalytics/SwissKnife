@@ -4,6 +4,9 @@ from avro.types import Record, Variables
 
 
 class NoDefault(object):
+    """
+    Class to model a not specified default value. In this case, a value is consider as required.
+    """
     pass
 
 
