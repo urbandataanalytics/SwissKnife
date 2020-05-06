@@ -11,7 +11,7 @@ class AvroTransformer(object):
     """
     Avrotransformer provides some useful methods to
     transform a data list (List[dict]) into another one
-    using an avro schema as reference to do transformations.
+    using an avro schema as a reference to do transformations.
 
     This avro schema will have some custom fields:
         - transform: Indicates a transform function that will be applied
@@ -21,8 +21,9 @@ class AvroTransformer(object):
     """
 
     def __init__(self, avro_schema: dict):
-        """Constructor of an AvroTransformer. Use an avro schema
-        as a reference to rename and trasform records.
+        """
+        AvroTransformer constructor. It use an avro schema
+        as a reference to rename and transform records.
         :param avro_schema: The provided schema.
         :type avro_schema: dict
         """
@@ -40,9 +41,9 @@ class AvroTransformer(object):
         return self.original_schema
 
     def apply_all_transforms(self, record: Record) -> Record:
-        """This function applies all the transformations of this object to a
-           input record.
-           The steps will be:
+        """
+        This function applies all the object transformations to an input record.
+           Steps will be:
             - get_renamed_record_an_remove_invalid_fields
             - get_transformed_record
             - get_record_with_defaults
@@ -57,7 +58,8 @@ class AvroTransformer(object):
         return self.get_record_with_casted_values(record_with_defaults)
 
     def get_renamed_record_and_remove_invalid_fields(self, record: Record) -> Record:
-        """Transforms a record to another one with correct names: If a field of the record
+        """
+        Transforms a record to another one with correct names: If a record field
         uses an alias, it will be changed to the correct name using the avro schema as reference.
         Also, a field that is not in the avro schema will be removed.
         :param record: The input record.
@@ -75,12 +77,13 @@ class AvroTransformer(object):
         return new_record
 
     def get_record_with_defaults(self, record: Record) -> Record:
-        """Creates a new record from an existing one. Empty fields are filled with its default value,
-        defined in the loaded schema. If an empty field does not have a default value, then an
-        exception will rise.
+        """
+        Creates a new record from an existing one. Empty fields are filled with its default value,
+        defined in the loaded schema. If an empty field does not have a default value, the function will rise
+        an exception.
         :param record: The input record.
         :type record: Record
-        :raises RuntimeError: When a field empty and has not default value.
+        :raises RuntimeError: When an empty field has not default value.
         :return: A new record with default values applied.
         :rtype: Record
         """
@@ -95,8 +98,8 @@ class AvroTransformer(object):
         return new_record
 
     def get_transformed_record(self, record: Record) -> Record:
-        """Applies the transformations in a record using the avro schema
-           as a reference.
+        """
+        Applies the transformations in a record using the avro schema as a reference.
         :param record: The input record.
         :type record: Record
         :return: A new record with transformations applied.
@@ -113,19 +116,18 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_rename_dict(schema: dict) -> dict:
-        # todo review this description
-        """Creates a dict that maps a name with the correct one.
+        """
+        Creates a dict that maps a name with the correct one.
         :param schema: The provided schema.
         :type schema: dict
-        :return: A dict with the map name -> correct_name. It can has
-        a "name -> name" pair or an "alias -> name" pair.
+        :return: A dict with the map "name -> correct_name". It maps
+        either a "name -> name" or an "alias -> name" pair.
         :rtype: dict
         """
-
         rename_dict = {}
         for field in schema[Variables.FIELDS]:
             field_name = field[Variables.NAME]
-            # Rename field_name to itselft
+            # Rename field_name to itself
             rename_dict[field_name] = field_name
             # rename aliases
             if Variables.ALIASES in field:
@@ -135,11 +137,12 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_transform_dict(schema: dict) -> dict:
-        """Creates a dict that maps a field with a transform function.
+        """
+        Creates a dict that maps a field with a transform function.
         :param schema: The provided schema.
         :type schema: dict
         :return: A dict that maps a field with a transform function.
-        It can be a empty dict if there are not fields with applied transform functions.
+        It can be an empty dict if there are not fields with transform functions to apply.
         :rtype: dict
         """
         transform_dict = {}
@@ -152,7 +155,12 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_cast_dict(schema: dict) -> dict:
-        # todo doc
+        """
+        Creates a dict that maps a field with its proper type to cast it, according to the provided avro schema.
+        :param schema: The provided avro schema
+        :return: A dict that maps field with its type
+        :rtype: dict
+        """
         cast_dict = {}
         for field in schema[Variables.FIELDS]:
             field_name = field[Variables.NAME]
@@ -162,13 +170,13 @@ class AvroTransformer(object):
 
     @staticmethod
     def _create_defaults_dict(schema: dict) -> dict:
-        """Creates a dict that maps a field with a defaults value.
+        """
+        Creates a dict that maps a field with its default value.
         :param schema: The provided avro schema
         :type schema: dict
-        :return: A dict that maps field with its defaults value.
+        :return: A dict that maps field with its default value.
         :rtype: dict
         """
-
         defaults_dict = {}
         for field in schema[Variables.FIELDS]:
             field_name = field[Variables.NAME]
@@ -181,25 +189,25 @@ class AvroTransformer(object):
 
     @staticmethod
     def _get_transform_function(transform_name: str) -> Callable[[object, dict], object]:
-        """Gets a transform function from a transform_name. The purpose of this function
-        is transform the current value of a field to another one (for example, an available
+        """
+        Gets a transform function from a transform_name. The purpose of this function
+        is to transform the current value of a field to another one (for example, an available
         value for the field type).
-        transform_name could be the name of a function or an expression, so the result will always be a closure.
-        For example, "copyFrom(date)" refers to function "copyFrom" whith the parameter "date".
+        transform_name could be a function name or an expression, so the result will always be a closure.
+        For example, "copyFrom(date)" refers to function "copyFrom" with the parameter "date".
         The returned function has two parameters:
             - value: The current value of the field.
             - record: The entire record.
 
         Available functions:
             - int2boolean: Transform an int to a boolean. True if x > 0, otherwise False.
-            - copyFrom(y): Return the value of field Y. So, the current value of the
+            - copyFrom(y): Return the value of field Y. The current value of the
                            target field is ignored.
 
         :param transform_name: The transform name.
         :type transform_name: str
-        :raises RuntimeError: Raises Exception if transform_name is invalid.
-        :raises RuntimeError: copyFrom function raises Exception when it is executed
-                              if the provided field is invalid.
+        :raises RuntimeError: Raises a exception if transform_name is invalid.
+        :raises RuntimeError: copyFrom function raises exception if the provided field is invalid when it is executed.
         :return: A transform function.
         :rtype: Callable[[object, dict], object]
         """
@@ -214,7 +222,7 @@ class AvroTransformer(object):
         elif re.match("copyFrom\(\w+\)", transform_name):
             copied_field = re.match("copyFrom\((\w+)\)", transform_name)[1]
 
-            def copyFrom(value:int, record:dict) -> bool:
+            def copyFrom(value: int, record: dict) -> bool:
                 if copied_field in record:
                     return record[copied_field]
                 else:
@@ -223,25 +231,35 @@ class AvroTransformer(object):
             selected_function = copyFrom
         # If there is not an available function, raise Exception
         if selected_function is None:
-            # todo Maybe the exception message could contain more info to help debug the issue, such as the value of copied_field or the available fields in the record
-            raise RuntimeError("Invalid name for a transform function")
+            raise RuntimeError(f"Invalid or unsupported name for a transform function: '{transform_name}'")
         return selected_function
 
     def get_record_with_casted_values(self, record: Record) -> Record:
+        """
+        Gets a new record with its values casted to the appropriate types
+        :param record: a record with transformation and default values applied
+        :return: a new record with casted values
+        """
         new_record = {}
         for key, value in record.items():
             try:
-                casted_value = self._get_casted_value(key, value, self.cast_dict)
+                types_list = self.cast_dict[key]
+                casted_value = self._get_casted_value(value, types_list)
             except Exception as ex:
-                # todo Same here, I'd print the name that was given
-                raise ValueError(f"In the record {record} the next error {ex} in the field {key} with value {value}")
+                raise ValueError(f"Error {ex} casting the field '{key}' with value '{value}' in the record {record}."
+                                 f"Available cast values: {types_list}")
             new_record[key] = casted_value
         return new_record
 
     @staticmethod
-    def _get_casted_value(key: str, value: object, cast_dict: dict) -> object:
-        types_list = cast_dict[key]
-        for type_to_cast in types_list:
+    def _get_casted_value(value: object, types_to_cast_list: list) -> object:
+        """
+        Helper function to cast a value according to the casting dictionary for that value
+        :param value: field value
+        :param types_to_cast_list: list with cast values
+        :return: a casted value
+        """
+        for type_to_cast in types_to_cast_list:
             if type_to_cast == "null" and value is None:
                 return None
             elif type_to_cast in ["int", "long"]:
@@ -265,5 +283,5 @@ class AvroTransformer(object):
             elif type_to_cast in ["string"]:
                 return str(value)
         # If the iteration over types list ends, the value is not valid. So, it raises an exception.
-        raise ValueError(f"The value {value} can not be cast to any type of {types_list}")
+        raise ValueError(f"The value {value} can not be cast to any type of {types_to_cast_list}")
 
