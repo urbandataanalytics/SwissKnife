@@ -69,18 +69,18 @@ class AvroTransformerTest(unittest.TestCase):
 
     def test_transform_function_int2boolean(self):
         int2boolean = AvroTransformer._get_transform_function("int2boolean")
-        self.assertEquals(int2boolean(0, {}), False)
-        self.assertEquals(int2boolean(-1, {}), False)
-        self.assertEquals(int2boolean(-30, {}), False)
-        self.assertEquals(int2boolean(1, {}), True)
-        self.assertEquals(int2boolean(2, {}), True)
-        self.assertEquals(int2boolean(30, {}), True)
+        self.assertEqual(int2boolean(0, {}), False)
+        self.assertEqual(int2boolean(-1, {}), False)
+        self.assertEqual(int2boolean(-30, {}), False)
+        self.assertEqual(int2boolean(1, {}), True)
+        self.assertEqual(int2boolean(2, {}), True)
+        self.assertEqual(int2boolean(30, {}), True)
 
     def test_transform_function_copyFrom(self):
         example_record_1 = {"word": "hola", "date": "yesterday", "num": 5}
         example_record_2 = {"word": "hola", "num": 5}
         copy_from_date = AvroTransformer._get_transform_function("copyFrom(date)")
-        self.assertEquals(copy_from_date("aux", example_record_1), "yesterday")
+        self.assertEqual(copy_from_date("aux", example_record_1), "yesterday")
         with self.assertRaises(RuntimeError) as context:
             copy_from_date("aux", example_record_2)
 
