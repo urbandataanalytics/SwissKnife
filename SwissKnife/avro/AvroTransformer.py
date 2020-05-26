@@ -1,6 +1,6 @@
 import re
 from typing import Callable
-from avro.types import Record, Variables
+from SwissKnife.avro.types import Record, Variables
 
 
 class NoDefault(object):
