@@ -174,6 +174,8 @@ class GCloudStorage:
 
         :param storage_path: Parent path from which files will be listed(without slash at the end)
         :type storage_path: str
+        :param with_prefix: this adds or not the BUCKET_PREFIX_PATH to the resulting path
+        :type with_prefix: bool
         :return: Iterator with blobs contained in the parent path
         :rtype: "Iterator"
         """
