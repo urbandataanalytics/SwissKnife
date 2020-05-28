@@ -3,6 +3,7 @@ import imp
 import unittest
 import SwissKnife
 import tests.test_utils as test_utils
+from unittest.mock import MagicMock
 
 from unittest import mock
 from SwissKnife.gcloud.GCloudStorage import GCloudStorage
@@ -47,6 +48,17 @@ class test_GCloudStorage(unittest.TestCase):
                                                               with_prefix=False)
         
         self.assertEqual(expected, result)
+
+    def test_path_without_file_name(self):
+        file_path = 'random/path'
+        expected = f'gs://fancy-bucket/{file_path}/'
+                
+        result = GCloudStorage.get_storage_complete_file_path(
+                                                              file_path=file_path,
+                                                              with_bucket=True,
+                                                              with_prefix=False
+                                                             )
+        self.assertEqual(expected, result)
     
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_correct_data_type_to_upload(self, mock_gcloud):
@@ -62,8 +74,7 @@ class test_GCloudStorage(unittest.TestCase):
                                                           dt,
                                                           file_path,
                                                           file_name))
-        
-        
+
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_incorrect_data_type_to_upload(self, mock_gcloud):
         gc = GCloudStorage()
@@ -79,9 +90,32 @@ class test_GCloudStorage(unittest.TestCase):
                                     dt,
                                     file_path,
                                     file_name)
-    
+
+    @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
+    def test_valid_path_in_list_blobs(self, mock_gcloud):
+
+
+        storage_path = 'random_path'
+        expected = f'{self.bucket_path_prefix}/{storage_path}/'
+
+        def assert_path_in_list_blobs(prefix):
+
+            self.assertEqual(prefix, expected)
+
+        mocked_bucket = MagicMock()
+        mocked_bucket.list_blobs = assert_path_in_list_blobs
+        
+        gc = GCloudStorage()
+        gc.bucket = mocked_bucket
+
+        gc.list_blobs(storage_path)
+
+
+
+
     """
         The rest of methods are not tested in this class, as they are mere
         rewrittings of code provided by Google. This tests would require, 
         as well, to have a working internet connection and a configured SA.
     """
+
