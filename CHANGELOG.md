@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.1] - 2020-05-28
+## [0.6.3] - 2020-05-xx
+### Changed
+- Improved *GCloudStorage.get_storage_complete_file_path* using *os.path.join*.
+- *file_name* is optional in *GCloudStorage.get_storage_complete_file_path*.
+### Fixed
+- Now *GCloudStorage.list_blobs* can use the BUCKET_PREFIX_PATH. It has an optional param "with_prefix" (True by default).
+
+## [0.6.2] - 2020-05-28
 #### Added
 - Added a calendar function to get weeks numbers with format `2020W02`
 
