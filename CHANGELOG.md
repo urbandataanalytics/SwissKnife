@@ -6,10 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.3] - 2020-05-xx
 ### Changed
-- Improved *GCloudStorage.get_storage_complete_file_path* using *os.path.join*.
-- *file_name* is optional in *GCloudStorage.get_storage_complete_file_path*.
+- Improved `GCloudStorage.get_storage_complete_file_path` using `os.path.join`.
+- `file_name` is optional in `GCloudStorage.get_storage_complete_file_path`.
 ### Fixed
-- Now *GCloudStorage.list_blobs* can use the BUCKET_PREFIX_PATH. It has an optional param "with_prefix" (True by default). <issue #11>
+- Now `GCloudStorage.list_blobs` can use the BUCKET_PREFIX_PATH. It has an optional param "with_prefix" (True by default). <issue #11>
 
 ## [0.6.2] - 2020-05-28
 #### Added
