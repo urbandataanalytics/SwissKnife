@@ -1,4 +1,5 @@
 import sys
+import os
 import logging
 import google.cloud.storage as gcloud
 
@@ -138,7 +139,7 @@ class GCloudStorage:
         return blob
     
     @staticmethod
-    def get_storage_complete_file_path(file_name: str,
+    def get_storage_complete_file_path(file_name: str=None,
                                        file_path: str=None,
                                        with_bucket: bool=False,
                                        with_prefix: bool=True,
@@ -158,21 +159,26 @@ class GCloudStorage:
         :return: Complete path of a file stored in gcloud
         :rtype: str
         """
-        bucket_name = f'{BUCKET_NAME}/' if with_bucket else ''
-        file_prefix = f'{BUCKET_PATH_PREFIX}/' if with_prefix and BUCKET_PATH_PREFIX else ''
-        path = f'{file_path}/' if file_path else ''
+        bucket_name = BUCKET_NAME if with_bucket else ''
+        file_prefix = BUCKET_PATH_PREFIX if with_prefix and BUCKET_PATH_PREFIX else ''
+        final_file_path = file_path if file_path else ''
         gs_prefix = 'gs://' if with_gs else ''
+        final_file_name = file_name if file_name else ''
         
-        return f'{gs_prefix}{bucket_name}{file_prefix}{path}{file_name}'
+        return os.path.join(gs_prefix, bucket_name, file_prefix, final_file_path, final_file_name)
 
-    def list_blobs(self, storage_path: str) -> "Iterator":
+    def list_blobs(self, storage_path: str, with_prefix : bool = True) -> "Iterator":
         """Lists all the files that exists in the specified path.
         This is similar to GNU's `ls` command. Returns an iterator
         that should be treated later on.
 
-        :param storage_path: Parent path from which files will be listed
+        :param storage_path: Parent path from which files will be listed(without slash at the end)
         :type storage_path: str
+        :param with_prefix: this adds or not the BUCKET_PREFIX_PATH to the resulting path
+        :type with_prefix: bool
         :return: Iterator with blobs contained in the parent path
         :rtype: "Iterator"
         """
-        return self.bucket.list_blobs(prefix=storage_path)
+
+        list_prefix = GCloudStorage.get_storage_complete_file_path(file_path=storage_path, with_prefix=with_prefix, with_gs=False)
+        return self.bucket.list_blobs(prefix=list_prefix)
