@@ -110,7 +110,6 @@ class test_GCloudStorage(unittest.TestCase):
 
         gc.list_blobs(storage_path)
 
-
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_valid_path_in_list_blobs_without_prefix(self, mock_gcloud):
 
