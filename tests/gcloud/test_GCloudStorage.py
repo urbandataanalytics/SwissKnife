@@ -68,28 +68,31 @@ class test_GCloudStorage(unittest.TestCase):
         expected = f'gs://fancy-bucket/{self.bucket_path_prefix}/{file_path}/{file_name}'
         
         data_types = ["str", "file"]
+        metadata = {'key': 'test'}
         for dt in data_types:
             self.assertEqual(expected, gc.save_to_storage("data",
                                                           None,
                                                           dt,
                                                           file_path,
-                                                          file_name))
+                                                          file_name,
+                                                          metadata=metadata))
+            self.assertEqual(metadata, mock_gcloud.Client().get_bucket().blob().metadata)
 
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_incorrect_data_type_to_upload(self, mock_gcloud):
         gc = GCloudStorage()
         file_path = 'random/path'
         file_name = 'blah.gif'
-        expected = f'gs://fancy-bucket/{self.bucket_path_prefix}/{file_path}/{file_name}'
-        
+
         wrong_data_types = ["string", "files", None, "gzip", "image"]
         with self.assertRaises(NotImplementedError):
             for dt in wrong_data_types:
                 gc.save_to_storage("data",
-                                    None,
-                                    dt,
-                                    file_path,
-                                    file_name)
+                                   None,
+                                   dt,
+                                   file_path,
+                                   file_name)
+
 
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_valid_path_in_list_blobs_with_prefix(self, mock_gcloud):
