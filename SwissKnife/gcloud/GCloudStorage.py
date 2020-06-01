@@ -146,7 +146,7 @@ class GCloudStorage:
         """
         blob_name = self.get_storage_complete_file_path(file_name, file_path, with_gs=False)
         blob = self.bucket.blob(blob_name)
-        blob.metadata.update(metadata)
+        blob.metadata = metadata
 
         if encoding:
             blob.content_encoding = encoding
