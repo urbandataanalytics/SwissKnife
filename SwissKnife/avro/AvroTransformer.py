@@ -4,7 +4,7 @@ from SwissKnife.avro.appliers import DefaultsApplier
 from SwissKnife.avro.appliers import RenameApplier
 from SwissKnife.avro.appliers import TransformApplier
 from SwissKnife.avro.appliers import CastApplier
-
+from SwissKnife.avro.utils    import chain_functions
 
 
 class AvroTransformer(object):
@@ -52,9 +52,13 @@ class AvroTransformer(object):
         :return: A record with all transformations applied.
         :rtype: Record
         """
-        renamed_record = self.rename_applier.apply(record)
-        transformed_record = self.transform_applier.apply(renamed_record)
-        record_with_defaults = self.defaults_applier.apply(transformed_record)
-        return self.cast_applier.apply(record_with_defaults)
+
+        all_functions = chain_functions(
+            self.rename_applier.apply,
+            self.transform_applier.apply,
+            self.defaults_applier.apply,
+            self.cast_applier.apply
+        )
+        return all_functions(record)
 
     
