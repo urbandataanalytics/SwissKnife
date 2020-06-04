@@ -3,6 +3,11 @@ from typing import Dict
 # The type of each record file.
 Record = Dict[str, object]
 
+class NoDefault(object):
+    """
+    Class to model a not specified default value. In this case, a value is consider as required.
+    """
+    pass
 
 class Variables:
     """

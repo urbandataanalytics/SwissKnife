@@ -1,6 +1,10 @@
 import unittest
 
 from SwissKnife.avro.AvroTransformer import AvroTransformer, NoDefault
+from SwissKnife.avro.appliers import CastApplier
+from SwissKnife.avro.appliers import DefaultsApplier
+from SwissKnife.avro.appliers import RenameApplier
+from SwissKnife.avro.appliers import TransformApplier
 
 
 class AvroTransformerTest(unittest.TestCase):
@@ -40,7 +44,7 @@ class AvroTransformerTest(unittest.TestCase):
     }
 
     def test__create_rename_dict(self):
-        rename_dict = AvroTransformer._create_rename_dict(self.example_avro_schema)
+        rename_dict = RenameApplier(self.example_avro_schema).rename_dict
         self.assertDictEqual(rename_dict, {
             "url": "url",
             "code": "code",
@@ -54,11 +58,11 @@ class AvroTransformerTest(unittest.TestCase):
 
     def test__create_transform_dict(self):
         # It is complicated to test the values (functions) of the dict
-        transform_dict = AvroTransformer._create_transform_dict(self.example_avro_schema)
+        transform_dict = TransformApplier(self.example_avro_schema).transform_dict
         self.assertListEqual(list(transform_dict.keys()), ["startDate", "isReady"])
 
     def test__create_defaults_dict(self):
-        defaults_dict = AvroTransformer._create_defaults_dict(self.example_avro_schema)
+        defaults_dict = DefaultsApplier(self.example_avro_schema).defaults_dict
         self.assertDictEqual(defaults_dict, {
             "url": NoDefault,
             "code": None,
@@ -68,7 +72,7 @@ class AvroTransformerTest(unittest.TestCase):
         })
 
     def test_transform_function_int2boolean(self):
-        int2boolean = AvroTransformer._get_transform_function("int2boolean")
+        int2boolean = TransformApplier(self.example_avro_schema).get_transform_function("int2boolean")
         self.assertEqual(int2boolean(0, {}), False)
         self.assertEqual(int2boolean(-1, {}), False)
         self.assertEqual(int2boolean(-30, {}), False)
@@ -79,7 +83,7 @@ class AvroTransformerTest(unittest.TestCase):
     def test_transform_function_copyFrom(self):
         example_record_1 = {"word": "hola", "date": "yesterday", "num": 5}
         example_record_2 = {"word": "hola", "num": 5}
-        copy_from_date = AvroTransformer._get_transform_function("copyFrom(date)")
+        copy_from_date = TransformApplier(self.example_avro_schema).get_transform_function("copyFrom(date)")
         self.assertEqual(copy_from_date("aux", example_record_1), "yesterday")
         with self.assertRaises(RuntimeError) as context:
             copy_from_date("aux", example_record_2)
@@ -92,9 +96,9 @@ class AvroTransformerTest(unittest.TestCase):
             "startDate": None,
             "isReady": 1
         }
-        avro_transformer = AvroTransformer(self.example_avro_schema)
+        transform_applier = TransformApplier(self.example_avro_schema)
         self.assertDictEqual(
-            avro_transformer.get_transformed_record(example_record),
+            transform_applier.apply(example_record),
             {
                 "url": "http://google.com",
                 "code": "123456",
@@ -112,9 +116,9 @@ class AvroTransformerTest(unittest.TestCase):
             "lastupdate": "123456789",
             "isReady": 1
         }
-        avro_transformer = AvroTransformer(self.example_avro_schema)
+        rename_applier = RenameApplier(self.example_avro_schema)
         self.assertDictEqual(
-            avro_transformer.get_renamed_record_and_remove_invalid_fields(example_record),
+            rename_applier.apply(example_record),
             {
                 "url": "http://google.com",
                 "code": "123456",
@@ -136,9 +140,9 @@ class AvroTransformerTest(unittest.TestCase):
             "startDate": None
         }
 
-        avro_transformer = AvroTransformer(self.example_avro_schema)
+        defaults_applier = DefaultsApplier(self.example_avro_schema)
         self.assertDictEqual(
-            avro_transformer.get_record_with_defaults(example_record_1),
+            defaults_applier.apply(example_record_1),
             {
                 "url": "http://google.com",
                 "code": None,
@@ -148,7 +152,7 @@ class AvroTransformerTest(unittest.TestCase):
             }
         )
         with self.assertRaises(RuntimeError):
-            avro_transformer.get_record_with_defaults(example_record_default)
+            defaults_applier.apply(example_record_default)
 
     def test_apply_all_transforms(self):
         example_record = {
