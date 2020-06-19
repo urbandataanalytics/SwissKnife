@@ -29,7 +29,20 @@ class GCloudStorage:
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
     
-    def download_to_file(self, gs_path:str , local_path: str, use_bucket_path_prefix:bool=True, is_binary:bool=False):
+    def download_to_local_file(self, gs_path:str , local_path: str, use_bucket_path_prefix:bool=True, is_binary:bool=False):
+        """This method downloads a file from the bucket to a local file. If the 'gs_path' is complete, it will be used. But,
+        if it is only a subpath, it will be concatenated with the values BUCKET_NAME and BUCKET_PREFIX_PATH.
+
+        :param gs_path: The path of the Google Storage file. It can be complete or only a subpath. 
+        :type gs_path: str
+        :param local_path: The path where the data will be writed 
+        :type local_path: str
+        :param use_bucket_path_prefix: Add the BUCKET_PREFIX_PATH to the gs_path if it is a subpath. Defaults to True
+        :type use_bucket_path_prefix: bool, optional
+        :param is_binary: A flag that indicates if it is a binary file, defaults to False
+        :type is_binary: bool, optional
+        :raises RuntimeError: Raises a RuntimeError if the download process fails. 
+        """
         
         # It is a complete path. so, it will use a custom bucket
         if gs_path.startswith("gs://"):
@@ -38,6 +51,7 @@ class GCloudStorage:
             bucket_name = parts[0]
             file_path = "/".join(parts[1:])
             bucket = self.storage_client.get_bucket(bucket_name)
+        # It is not a complete path. So, it will use the BUCKET_PATH configuration
         else:
             bucket = self.bucket
             file_path = os.path.join(
@@ -45,7 +59,7 @@ class GCloudStorage:
                 gs_path
             )
 
-        write_opts = "wb" if is_binary else "w"
+        write_opts = "wb" if is_binary else "w" # The file cloud be binary
         try:
             self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
 
