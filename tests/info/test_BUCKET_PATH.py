@@ -41,5 +41,5 @@ class Test_BUCKET_PATH(unittest.TestCase):
         Check the value when the variable is not defined
         """
         test_utils.delete_env_variable("BUCKET_PATH")
-        self.assertEqual("", SwissKnife.info.BUCKET_NAME)
-        self.assertEqual("", SwissKnife.info.BUCKET_PATH_PREFIX)
+        self.assertEqual(None, SwissKnife.info.BUCKET_NAME)
+        self.assertEqual(None, SwissKnife.info.BUCKET_PATH_PREFIX)

@@ -18,7 +18,17 @@ class test_GCloudStorage(unittest.TestCase):
         
         test_utils.set_env_variable('BUCKET_PATH', self.bucket_path_env_value)
         imp.reload(SwissKnife.gcloud.GCloudStorage) # needed to reload BUCKET_PATH
+
+    def GCloudStorage_raises_an_exception_when_bucket_path_is_not_defined(self):
+
+        test_utils.set_env_variable('BUCKET_PATH', None)
+        imp.reload(SwissKnife.gcloud.GCloudStorage) # needed to reload BUCKET_PATH
+
+        with self.assertRaises(RuntimeError) as ex:
+            gcs = GCloudStorage()
         
+        self.assertTrue("invalid BUCKET PATH" in str(ex.exception))
+
     def test_path_complete_without_bucket_with_prefix(self):      
         file_path = 'random/path'
         file_name = 'blah.gif'

@@ -13,14 +13,50 @@ class GCloudStorage:
         which contains the path of the SA that will be used for authentication.
         It's also a must to have an active Internet connection, otherwise the
         connection with the gcloud servers can not be performed.
+        Also, this object needs the enviroment variable "BUCKET_PATH". It will extract the
+        BUCKET_NAME and the BUCKET_PATH_PREFIX using the "info" module. If BUCKET_PATH is not
+        defined, an exception will be raised.
 
         :param logger: Logger object to use, defaults to logging.getLogger("GCloudStorage")
         :type logger: logging.Logger, optional
         """
+
+        if BUCKET_NAME is None:
+            raise RuntimeError("BUCKET_PATH environment variable not available.")
+
         self.logger = logger
         self.logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
+    
+    def download_to_file(self, gs_path:str , local_path: str, use_bucket_path_prefix:bool=True, is_binary:bool=False):
+        
+        # It is a complete path. so, it will use a custom bucket
+        if gs_path.startswith("gs://"):
+            gs_length = len("gs://")
+            parts = gs_path[gs_length:].split("/")
+            bucket_name = parts[0]
+            file_path = "/".join(parts[1:])
+            bucket = self.storage_client.get_bucket(bucket_name)
+        else:
+            bucket = self.bucket
+            file_path = os.path.join(
+                BUCKET_PATH_PREFIX if use_bucket_path_prefix else '',
+                gs_path
+            )
+
+        write_opts = "wb" if is_binary else "w"
+        try:
+            self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
+
+            blob_from = bucket.blob(file_path)
+
+            with open(local_path, write_opts) as f:
+                blob_from.download_to_file(f)
+
+        except Exception as e:
+            self.logger.exception("Error downloading file from gcloud", exc_info=True)
+            raise RuntimeError(f"Error downloading file from gcloud : {e}") 
 
     def save_file(self,
                   origin_local_path: str,
