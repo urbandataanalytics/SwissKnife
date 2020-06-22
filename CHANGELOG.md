@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added download_to_file to GCloudStorage
+### Changed
+- Changed and improved the behaviour of split_bucket_env.
+- Add Exception to GCloudStorage if BUCKET_NAME is not defined.
 
 ## [0.6.4] - 2020-06-01
 ### Added 
