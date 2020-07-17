@@ -36,10 +36,10 @@ class GCloudStorage:
         else:
             raise RuntimeError("bucket_name param or BUCKET_PATH environment variable not available.")
 
-        self.logger = logger
-        self.bucket = self.storage_client.get_bucket(self.bucket_name)
-        self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
         self.storage_client = gcloud.Client()
+        self.bucket = self.storage_client.get_bucket(self.bucket_name)
+        self.logger = logger
+        self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
 
     def download_to_local_file(self,
                                gs_path: str,
@@ -84,7 +84,7 @@ class GCloudStorage:
 
         except Exception as e:
             self.logger.exception("Error downloading file from gcloud", exc_info=True)
-            raise RuntimeError(f"Error downloading file from gcloud : {e}") 
+            raise RuntimeError(f"Error downloading file from gcloud : {e}")
 
     def save_file(self,
                   origin_local_path: str,
@@ -237,7 +237,7 @@ class GCloudStorage:
         :return: Complete path of a file stored in gcloud
         :rtype: str
         """
-        bucket_name = self.bucket.name if with_bucket else ''
+        bucket_name = self.bucket_name if with_bucket else ''
         file_prefix = self.bucket_path_prefix if with_prefix and self.bucket_path_prefix else ''
         final_file_path = file_path if file_path else ''
         gs_prefix = 'gs://' if with_gs else ''
@@ -260,7 +260,7 @@ class GCloudStorage:
         :rtype: "Iterator"
         """
 
-        list_prefix = GCloudStorage.get_storage_complete_file_path(file_path=storage_path,
-                                                                   with_prefix=with_prefix,
-                                                                   with_gs=False)
+        list_prefix = self.get_storage_complete_file_path(file_path=storage_path,
+                                                          with_prefix=with_prefix,
+                                                          with_gs=False)
         return self.bucket.list_blobs(prefix=list_prefix)
