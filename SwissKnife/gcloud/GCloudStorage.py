@@ -25,7 +25,7 @@ class GCloudStorage:
         :param bucket: bucket name to use. Bucket string is splitted in two parts: the name of the bucket
         and the folder structure behind it (bucket prefix path). If it is not set, then environment variable
         "BUCKET_PATH" is used.
-        :type bucket_name: str, optional
+        :type bucket: str, optional
         """
 
         if bucket:

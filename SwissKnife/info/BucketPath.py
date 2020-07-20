@@ -17,9 +17,7 @@ def split_bucket(bucket_path: str) -> (str, str):
     else:
         splitted_bucket = bucket_path.replace("gs://", "").split("/")
         base_bucket = splitted_bucket[0]
-        print("bucket:", base_bucket)
         path_prefix = "/".join(splitted_bucket[1:])
-        print("path_prefix:", path_prefix)
         if base_bucket == "":
             raise RuntimeError(f"Invalid BUCKET_PATH -> {bucket_path}")
 
