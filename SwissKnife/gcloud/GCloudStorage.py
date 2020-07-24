@@ -68,7 +68,7 @@ class GCloudStorage:
             file_path = "/".join(parts[1:])
             bucket = self.storage_client.get_bucket(bucket_name)
         else:
-            # It is not a complete path. So, it will use the BUCKET_PATH configuration
+            # It is not a complete path. So, it will use the bucket configuration defined in constructor
             bucket = self.bucket
             file_path = os.path.join(self.bucket_path_prefix if use_bucket_path_prefix else '', gs_path)
 
@@ -228,7 +228,7 @@ class GCloudStorage:
         :type file_path: str
         :param file_name: Name of the file
         :type file_name: str
-        :param with_bucket: Whether bucket will be return or not, defaults to False
+        :param with_bucket: Whether bucket will be returned or not, defaults to False
         :type with_bucket: bool, optional
         :param with_prefix: If with_prefix is set, bucket path prefix is used. Defaults to True
         :type with_prefix: bool, optional
