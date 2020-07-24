@@ -1,5 +1,4 @@
 import unittest
-import SwissKnife
 import SwissKnife.info
 import tests.test_utils as test_utils
 
