@@ -1,7 +1,8 @@
 import os
 import logging
-from SwissKnife.info.BucketPath import split_bucket
 import google.cloud.storage as gcloud
+from SwissKnife.info.BucketPath import split_bucket
+
 
 from SwissKnife.info import BUCKET_NAME, BUCKET_PATH_PREFIX
 
