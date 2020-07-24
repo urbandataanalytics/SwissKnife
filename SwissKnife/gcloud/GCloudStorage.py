@@ -1,65 +1,80 @@
 import os
 import logging
 import google.cloud.storage as gcloud
+from SwissKnife.info.BucketPath import split_bucket
+
 
 from SwissKnife.info import BUCKET_NAME, BUCKET_PATH_PREFIX
 
 
 class GCloudStorage:
 
-    def __init__(self, logger: logging.Logger = logging.getLogger("GCloudStorage")):
+    def __init__(self,
+                 logger: logging.Logger = logging.getLogger("GCloudStorage"),
+                 bucket: str = None):
         """Creates a new GCloudStorage object. To do so, it's needed
         to have an environmental variable GOOGLE_APPLICATION_CREDENTIALS
         which contains the path of the SA that will be used for authentication.
         It's also a must to have an active Internet connection, otherwise the
         connection with the gcloud servers can not be performed.
-        Also, this object needs the enviroment variable "BUCKET_PATH". It will extract the
-        BUCKET_NAME and the BUCKET_PATH_PREFIX using the "info" module. If BUCKET_PATH is not
+        Also, this object use the environment variable "BUCKET_PATH" if bucket_name parameter is ignored (None).
+        It will extract the BUCKET_NAME and the BUCKET_PATH_PREFIX using the "info" module. If BUCKET_PATH is not
         defined, an exception will be raised.
 
         :param logger: Logger object to use, defaults to logging.getLogger("GCloudStorage")
         :type logger: logging.Logger, optional
+        :param bucket: bucket name to use. Bucket string is splitted in two parts: the name of the bucket
+        and the folder structure behind it (bucket prefix path). If it is not set, then environment variable
+        "BUCKET_PATH" is used.
+        :type bucket: str, optional
         """
 
-        if BUCKET_NAME is None:
-            raise RuntimeError("BUCKET_PATH environment variable not available.")
+        if bucket:
+            self.bucket_name, self.bucket_path_prefix = split_bucket(bucket)
+        elif BUCKET_NAME:
+            self.bucket_name = BUCKET_NAME
+            self.bucket_path_prefix = BUCKET_PATH_PREFIX
+        else:
+            raise RuntimeError("bucket_name param or BUCKET_PATH environment variable not available.")
 
-        self.logger = logger
-        self.logger.info(f"Building a new gcloud Storage client for bucket {BUCKET_NAME}")
         self.storage_client = gcloud.Client()
-        self.bucket = self.storage_client.get_bucket(BUCKET_NAME)
-    
-    def download_to_local_file(self, gs_path:str , local_path: str, use_bucket_path_prefix:bool=True, is_binary:bool=False):
-        """This method downloads a file from the bucket to a local file. If the 'gs_path' is complete, it will be used. But,
-        if it is only a subpath, it will be concatenated with the values BUCKET_NAME and BUCKET_PREFIX_PATH.
+        self.bucket = self.storage_client.get_bucket(self.bucket_name)
+        self.logger = logger
+        self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
+
+    def download_to_local_file(self,
+                               gs_path: str,
+                               local_path: str,
+                               use_bucket_path_prefix: bool = True,
+                               is_binary: bool = False):
+        """This method downloads a file from the bucket to a local file. If the 'gs_path' is complete, it will be used.
+        But, if it is only a subpath, it will be concatenated with the values BUCKET_NAME and BUCKET_PREFIX_PATH.
 
         :param gs_path: The path of the Google Storage file. It can be complete or only a subpath. 
         :type gs_path: str
         :param local_path: The path where the data will be writed 
         :type local_path: str
-        :param use_bucket_path_prefix: Add the BUCKET_PREFIX_PATH to the gs_path if it is a subpath. Defaults to True
+        :param use_bucket_path_prefix: Add the BUCKET_PATH_PREFIX to the gs_path if it is a subpath. Defaults to True
         :type use_bucket_path_prefix: bool, optional
         :param is_binary: A flag that indicates if it is a binary file, defaults to False
         :type is_binary: bool, optional
         :raises RuntimeError: Raises a RuntimeError if the download process fails. 
         """
-        
-        # It is a complete path. so, it will use a custom bucket
+
         if gs_path.startswith("gs://"):
+            # It is a complete path. so, it will use a custom bucket
             gs_length = len("gs://")
             parts = gs_path[gs_length:].split("/")
             bucket_name = parts[0]
             file_path = "/".join(parts[1:])
             bucket = self.storage_client.get_bucket(bucket_name)
-        # It is not a complete path. So, it will use the BUCKET_PATH configuration
         else:
+            # It is not a complete path. So, it will use the bucket configuration defined in constructor
             bucket = self.bucket
-            file_path = os.path.join(
-                BUCKET_PATH_PREFIX if use_bucket_path_prefix else '',
-                gs_path
-            )
+            file_path = os.path.join(self.bucket_path_prefix if use_bucket_path_prefix else '', gs_path)
 
-        write_opts = "wb" if is_binary else "w" # The file cloud be binary
+        # The file cloud be binary
+        write_opts = "wb" if is_binary else "w"
         try:
             self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
 
@@ -70,13 +85,13 @@ class GCloudStorage:
 
         except Exception as e:
             self.logger.exception("Error downloading file from gcloud", exc_info=True)
-            raise RuntimeError(f"Error downloading file from gcloud : {e}") 
+            raise RuntimeError(f"Error downloading file from gcloud : {e}")
 
     def save_file(self,
                   origin_local_path: str,
                   destination_file_name: str,
                   destination_storage_path: str,
-                  encoding: str=None,
+                  encoding: str = None,
                   metadata: dict = None) -> str:
         """Uploads a file from a local path to a destination
         located in a gcloud bucket.
@@ -105,8 +120,8 @@ class GCloudStorage:
                     origin_data_str: str,
                     destination_file_name: str,
                     destination_storage_path: str,
-                    encoding: str=None,
-                    metadata: dict=None
+                    encoding: str = None,
+                    metadata: dict = None
                     ) -> str:
         """Transforms a string to a text file and uploads it to
         gcloud Storage.
@@ -129,8 +144,7 @@ class GCloudStorage:
                                     data_type='str',
                                     destination_storage_path=destination_storage_path,
                                     destination_file_name=destination_file_name,
-                                    metadata=metadata
-                                    )
+                                    metadata=metadata)
 
     def save_to_storage(self,
                         data,
@@ -138,7 +152,7 @@ class GCloudStorage:
                         data_type: str,
                         destination_storage_path: str,
                         destination_file_name: str,
-                        metadata: dict=None) -> str:
+                        metadata: dict = None) -> str:
         """Uploads data, which may come in several formats, to
         Storage. Accepted data types are 'file' and 'str', matching
         methods save_file and save_string of this same class.
@@ -178,7 +192,7 @@ class GCloudStorage:
                         file_path: str,
                         file_name: str,
                         encoding: str,
-                        metadata: dict=None) -> gcloud.blob.Blob:
+                        metadata: dict = None) -> gcloud.blob.Blob:
         """Creates a new Blob with the specified path and name.
         Before uploading a file to gcloud it is needed to first
         generate a Blob containing basic info such as name and encoding.
@@ -203,36 +217,38 @@ class GCloudStorage:
 
         return blob
 
-    @staticmethod
-    def get_storage_complete_file_path(file_name: str=None,
-                                       file_path: str=None,
-                                       with_bucket: bool=False,
-                                       with_prefix: bool=True,
-                                       with_gs: bool=True) -> str:
+    def get_storage_complete_file_path(self,
+                                       file_name: str = None,
+                                       file_path: str = None,
+                                       with_bucket: bool = False,
+                                       with_prefix: bool = True,
+                                       with_gs: bool = True) -> str:
         """Returns the complete path of a file stored in gcloud.
 
         :param file_path: Path of the file, without bucket
         :type file_path: str
         :param file_name: Name of the file
         :type file_name: str
-        :param with_bucket: If the bucket will be returned, defaults to False
+        :param with_bucket: Whether bucket will be returned or not, defaults to False
         :type with_bucket: bool, optional
-        :param with_prefix: If prefix set by BUCKET_PATH_PREFIX is used, defaults to True
+        :param with_prefix: If with_prefix is set, bucket path prefix is used. Defaults to True
         :type with_prefix: bool, optional
         :param with_gs: If the string gs:// should be added to the path or not
         :type with_gs: bool, optional, True by default
         :return: Complete path of a file stored in gcloud
         :rtype: str
         """
-        bucket_name = BUCKET_NAME if with_bucket else ''
-        file_prefix = BUCKET_PATH_PREFIX if with_prefix and BUCKET_PATH_PREFIX else ''
+        bucket_name = self.bucket_name if with_bucket else ''
+        file_prefix = self.bucket_path_prefix if with_prefix and self.bucket_path_prefix else ''
         final_file_path = file_path if file_path else ''
         gs_prefix = 'gs://' if with_gs else ''
         final_file_name = file_name if file_name else ''
 
         return os.path.join(gs_prefix, bucket_name, file_prefix, final_file_path, final_file_name)
 
-    def list_blobs(self, storage_path: str, with_prefix : bool = True) -> "Iterator":
+    def list_blobs(self,
+                   storage_path: str,
+                   with_prefix: bool = True) -> "Iterator":
         """Lists all the files that exists in the specified path.
         This is similar to GNU's `ls` command. Returns an iterator
         that should be treated later on.
@@ -245,5 +261,7 @@ class GCloudStorage:
         :rtype: "Iterator"
         """
 
-        list_prefix = GCloudStorage.get_storage_complete_file_path(file_path=storage_path, with_prefix=with_prefix, with_gs=False)
+        list_prefix = self.get_storage_complete_file_path(file_path=storage_path,
+                                                          with_prefix=with_prefix,
+                                                          with_gs=False)
         return self.bucket.list_blobs(prefix=list_prefix)
