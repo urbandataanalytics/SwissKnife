@@ -39,19 +39,4 @@ def split_bucket_env() -> (str, str):
     elif "gs://" not in env_var:
         raise RuntimeError(f"Invalid BUCKET_PATH -> {env_var}")
     else:
-<<<<<<< HEAD
-
-        splitted_env_var = env_var.replace("gs://", "").split("/")
-        base_bucket = splitted_env_var[0]
-        print("env_var:", env_var)
-        path_prefix = "/".join(splitted_env_var[1:])
-        print("path_prefix:", path_prefix)
-        
-        if base_bucket == "":
-            raise RuntimeError(f"Invalid BUCKET_PATH -> {env_var}")
-
-        return base_bucket, path_prefix
-        
-=======
         return split_bucket(env_var)
->>>>>>> master
