@@ -30,5 +30,5 @@ def split_bucket_env() -> (str, str):
         if base_bucket == "":
             raise RuntimeError(f"Invalid BUCKET_PATH -> {env_var}")
 
-        return base_bucket, path_prefix        
+        return base_bucket, path_prefix
         

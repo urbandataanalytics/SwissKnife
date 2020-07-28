@@ -126,6 +126,23 @@ class test_GCloudStorage(unittest.TestCase):
     @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
     def test_valid_path_in_list_blobs_without_prefix(self, mock_gcloud):
 
+        storage_path = 'random_path'
+        expected = f'{storage_path}/'
+
+        def assert_path_in_list_blobs(prefix):
+
+            self.assertEqual(prefix, expected)
+
+        mocked_bucket = MagicMock()
+        mocked_bucket.list_blobs = assert_path_in_list_blobs
+        
+        gc = GCloudStorage()
+        gc.bucket = mocked_bucket
+
+        gc.list_blobs(storage_path, with_prefix=False)
+
+    @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
+    def test_valid_path_in_list_blobs_without_prefix(self, mock_gcloud):
 
         storage_path = 'random_path'
         expected = f'{storage_path}/'
@@ -142,7 +159,23 @@ class test_GCloudStorage(unittest.TestCase):
 
         gc.list_blobs(storage_path, with_prefix=False)
 
+    @mock.patch('SwissKnife.gcloud.GCloudStorage.gcloud')
+    def test_valid_path_in_list_blobs_without_prefix(self, mock_gcloud):
 
+        storage_path = 'random_path'
+        expected = f'{storage_path}/'
+
+        def assert_path_in_list_blobs(prefix):
+
+            self.assertEqual(prefix, expected)
+
+        mocked_bucket = MagicMock()
+        mocked_bucket.list_blobs = assert_path_in_list_blobs
+        
+        gc = GCloudStorage()
+        gc.bucket = mocked_bucket
+
+        gc.list_blobs(storage_path, with_prefix=False)
 
 
     """
