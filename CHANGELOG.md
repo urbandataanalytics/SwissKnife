@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2020-07-30
+### Added
+- Added copy_blob function to GCloudStorage class.
+
 ## [0.7.1] - 2020-07-24
 ### Changed
 - Refactor GCloudStorage to support generic bucket path, but it is compatible with previous functionality

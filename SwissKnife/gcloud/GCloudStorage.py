@@ -1,6 +1,7 @@
 import os
 import logging
 import google.cloud.storage as gcloud
+from google.cloud.storage.blob import Blob
 from SwissKnife.info.BucketPath import split_bucket
 
 
@@ -35,7 +36,7 @@ class GCloudStorage:
             self.bucket_name = BUCKET_NAME
             self.bucket_path_prefix = BUCKET_PATH_PREFIX
         else:
-            raise RuntimeError("bucket_name param or BUCKET_PATH environment variable not available.")
+            raise RuntimeError("bucket param or BUCKET_PATH environment variable not available.")
 
         self.storage_client = gcloud.Client()
         self.bucket = self.storage_client.get_bucket(self.bucket_name)
@@ -265,3 +266,31 @@ class GCloudStorage:
                                                           with_prefix=with_prefix,
                                                           with_gs=False)
         return self.bucket.list_blobs(prefix=list_prefix)
+
+    def copy_blob(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str) -> Blob:
+        """Copy a file to a new location (in the same or in another bucket) with a new name
+        using the google cloud api directly.
+
+        :param src_blob: The blob to copy. 
+        :type src_blob: Blob
+        :param dst_storage: The destination bucket.
+        :type dst_storage: GCloudStorage
+        :param dst_file_name: The new file name. 
+        :type dst_file_name: str
+        :return: The resulting blob.
+        :rtype: Blob
+        """
+
+        destination_bucket = dst_storage.bucket 
+        dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_file_name, with_prefix=True, with_bucket=False, with_gs=False)
+
+        dst_blob = self.bucket.copy_blob(src_blob, destination_bucket, dst_path)
+
+        # Log complete paths
+        complete_src_path = self.get_storage_complete_file_path(file_name=src_blob.name, with_bucket=True, with_prefix=True, with_gs=True)
+        complete_dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_blob.name, with_bucket=True, with_prefix=True, with_gs=True) 
+        self.logger.info(f"Blob {complete_src_path} copied to blob {complete_dst_path}")
+
+        return dst_blob
+
+
