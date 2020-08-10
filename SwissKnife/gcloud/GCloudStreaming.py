@@ -38,7 +38,7 @@ class GCloudStreaming(object):
         """
 
         self.bucket_name = bucket_name if bucket_name else BUCKET_NAME
-        self.blob_name = GCloudStorage.get_storage_complete_file_path(blob_name, with_gs=False)
+        self.blob_name = GCloudStorage(bucket=self.bucket_name).get_storage_complete_file_path(blob_name, with_gs=False)
         self.chunk_size = chunk_size
 
         self._client = None
