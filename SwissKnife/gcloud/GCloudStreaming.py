@@ -37,8 +37,8 @@ class GCloudStreaming(object):
         :type bucket_name: str
         """
 
-        self.bucket_name = bucket_name if bucket_name else BUCKET_NAME
-        self.blob_name = GCloudStorage(bucket=self.bucket_name).get_storage_complete_file_path(blob_name, with_gs=False)
+        self.gcloud_object = GCloudStorage(bucket=bucket_name)
+        self.blob_name = blob_name
         self.chunk_size = chunk_size
 
         self._client = None
@@ -78,20 +78,24 @@ class GCloudStreaming(object):
     def start(self):
         """Start of the object (it connects to Google Storage).
         """
-        full_path = GCloudStorage().get_storage_complete_file_path(self.blob_name, with_bucket=True, with_gs=True, with_prefix=False)
-        self.logger.info(f'Uploaded file to gcloud (streaming) path {full_path}')
+        self.logger.info(f'Uploaded file to gcloud (streaming) path {self.blob_name}')
 
-        self._client = storage.Client()
-        self._bucket = self._client.bucket(self.bucket_name)
-        self._blob = self._bucket.blob(self.blob_name)
+        blob_name_with_bucket_path_prefix = self.gcloud_object.get_storage_complete_file_path(
+            self.blob_name,
+            with_prefix=True,
+            with_bucket=False,
+            with_gs=False
+        )
+
+        self._blob = self.gcloud_object.bucket.blob(blob_name_with_bucket_path_prefix)
 
         self._transport = AuthorizedSession(
-            credentials=self._client._credentials
+            credentials=self.gcloud_object.storage_client._credentials
         )
 
         url = (
             'https://www.googleapis.com/upload/storage/v1/b/'
-            '{0}/o?uploadType=resumable'.format(self._bucket.name)
+            '{0}/o?uploadType=resumable'.format(self.gcloud_object.bucket.name)
         )
         self._request = requests.ResumableUpload(
             upload_url=url, chunk_size=self.chunk_size
