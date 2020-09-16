@@ -288,7 +288,7 @@ class GCloudStorage:
         elif mode == "rewrite":
             dst_blob = self.__copy_blob_using_rewrite_function(src_blob, dst_storage, dst_file_name)
         else:
-            raise RuntimeError(f"Invalid mode for copy_blob method: ${mode}")
+            raise RuntimeError(f"Invalid mode for copy_blob method: {mode}")
 
         complete_src_path = self.get_storage_complete_file_path(file_name=src_blob.name, with_bucket=True, with_prefix=True, with_gs=True)
         complete_dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_blob.name, with_bucket=True, with_prefix=True, with_gs=True) 
