@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.10.0] - 2020-09-16
+### Added
+- Added *rewrite* mode to 'copy_blob' function of GCloudStorage object. The *rewrite* mode uses the
+'rewrite' function that is better for large files.
+
 ## [0.9.0] - 2020-08-10
 ### Fixed
 - GCloudStreaming now uses GCloudStorage object and supports 'bucket_prefix_path'.
