@@ -1,5 +1,6 @@
 import os
 import logging
+from typing import Tuple
 import google.cloud.storage as gcloud
 from google.cloud.storage.blob import Blob
 from SwissKnife.info.BucketPath import split_bucket
@@ -267,7 +268,7 @@ class GCloudStorage:
                                                           with_gs=False)
         return self.bucket.list_blobs(prefix=list_prefix)
 
-    def copy_blob(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str) -> Blob:
+    def copy_blob(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str, mode: str = "copy") -> Blob:
         """Copy a file to a new location (in the same or in another bucket) with a new name
         using the google cloud api directly.
 
@@ -277,20 +278,64 @@ class GCloudStorage:
         :type dst_storage: GCloudStorage
         :param dst_file_name: The new file name. 
         :type dst_file_name: str
+        :param mode: It can be 'copy' or 'rewrite'. The first one uses 'copy_blob' method. The second one uses the 'rewrite' function.
         :return: The resulting blob.
         :rtype: Blob
         """
 
-        destination_bucket = dst_storage.bucket 
-        dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_file_name, with_prefix=True, with_bucket=False, with_gs=False)
+        if mode == "copy":
+            dst_blob = self.__copy_blob_using_copy_function(src_blob, dst_storage, dst_file_name)
+        elif mode == "rewrite":
+            dst_blob = self.__copy_blob_using_rewrite_function(src_blob, dst_storage, dst_file_name)
+        else:
+            raise RuntimeError(f"Invalid mode for copy_blob method: {mode}")
 
-        dst_blob = self.bucket.copy_blob(src_blob, destination_bucket, dst_path)
-
-        # Log complete paths
         complete_src_path = self.get_storage_complete_file_path(file_name=src_blob.name, with_bucket=True, with_prefix=True, with_gs=True)
         complete_dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_blob.name, with_bucket=True, with_prefix=True, with_gs=True) 
+
+        # Log complete paths
         self.logger.info(f"Blob {complete_src_path} copied to blob {complete_dst_path}")
 
         return dst_blob
+    
+    def __copy_blob_using_copy_function(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str) -> Blob:
+        """Copies a blob using the copy_blob function. For large files, using the "rewrite" version is better.
+
+        :param src_blob: The source blob. 
+        :type src_blob: Blob
+        :param dst_storage: The destination GCloudStorage object.
+        :type dst_storage: GCloudStorage
+        :param dst_file_name: The destination file name.
+        :type dst_file_name: str
+        :return: The destination blob. 
+        :rtype: Blob
+        """
+
+        dst_path = dst_storage.get_storage_complete_file_path(file_name=dst_file_name, with_prefix=True, with_bucket=False, with_gs=False)
+
+        destination_bucket = dst_storage.bucket 
+
+        dst_blob = self.bucket.copy_blob(src_blob, destination_bucket, dst_path)
+
+        return dst_blob
+
+    def __copy_blob_using_rewrite_function(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str) -> Blob:
+        """Copies a blob using the "rewrite" function. It is good for large files.
+
+        :param src_blob: The source blob. 
+        :type src_blob: Blob
+        :param dst_storage: The destination GCloudStorage object.
+        :type dst_storage: GCloudStorage
+        :param dst_file_name: The destination file name.
+        :type dst_file_name: str
+        :return: The destination blob. 
+        :rtype: Blob
+        """
+
+        dst_blob = dst_storage.__generate_blob("", dst_file_name, encoding=None)
+        dst_blob.rewrite(src_blob)
+
+        return dst_blob
+
 
 
