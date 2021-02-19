@@ -1,7 +1,9 @@
 import os
 import logging
 
+import backoff as backoff
 import google.cloud.storage as gcloud
+from google.cloud.exceptions import GoogleCloudError
 from google.cloud.storage.blob import Blob
 from SwissKnife.info.BucketPath import split_bucket
 
@@ -44,6 +46,7 @@ class GCloudStorage:
         self.logger = logger
         self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
 
+    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=120)
     def download_to_local_file(self,
                                gs_path: str,
                                local_path: str,
