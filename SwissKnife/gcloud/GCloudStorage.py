@@ -77,17 +77,15 @@ class GCloudStorage:
 
         # The file cloud be binary
         write_opts = "wb" if is_binary else "w"
+        self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
+        blob_from = bucket.blob(file_path)
+
         try:
-            self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
-
-            blob_from = bucket.blob(file_path)
-
             with open(local_path, write_opts) as f:
                 blob_from.download_to_file(f)
-
-        except Exception as e:
+        except:
             self.logger.exception("Error downloading file from gcloud", exc_info=True)
-            raise RuntimeError(f"Error downloading file from gcloud : {e}")
+            raise
 
     def save_file(self,
                   origin_local_path: str,
