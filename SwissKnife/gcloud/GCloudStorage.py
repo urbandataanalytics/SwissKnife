@@ -57,7 +57,7 @@ class GCloudStorage:
 
         :param gs_path: The path of the Google Storage file. It can be complete or only a subpath. 
         :type gs_path: str
-        :param local_path: The path where the data will be writed 
+        :param local_path: The path where the data will be written
         :type local_path: str
         :param use_bucket_path_prefix: Add the BUCKET_PATH_PREFIX to the gs_path if it is a subpath. Defaults to True
         :type use_bucket_path_prefix: bool, optional
