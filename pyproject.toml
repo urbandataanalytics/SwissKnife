@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "UDASwissKnife"
-version = "0.9.0"
+version = "0.10.0"
 description = "Utils and common libraries for Python"
 classifiers = ["License :: OSI Approved :: MIT License"]
 homepage = "https://github.com/urbandataanalytics/SwissKnife"
@@ -9,14 +9,14 @@ authors = ["UDARealState Data engineering Team"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 coverage = "^4.5"
 fastavro = {version = "^0.22", optional = true}
 google-cloud-storage = {version = "^1.23", optional = true}
 nose = "^1.3"
-backoff = "^1.10.0"
+backoff = {version = "^1.10", optional = true}
 
 [tool.poetry.extras]
-all = ["fastavro", "google-cloud-storage"]
+all = ["backoff", "fastavro", "google-cloud-storage"]
 avro = ["fastavro"]
-gcloud = ["google-cloud-storage"]
+gcloud = ["backoff", "google-cloud-storage"]
