@@ -1,5 +1,4 @@
 import setuptools
-from os import path
 
 DEPENDENCIES = [
     'coverage==4.5.4',

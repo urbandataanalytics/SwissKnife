@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import Tuple
+
 import google.cloud.storage as gcloud
 from google.cloud.storage.blob import Blob
 from SwissKnife.info.BucketPath import split_bucket
