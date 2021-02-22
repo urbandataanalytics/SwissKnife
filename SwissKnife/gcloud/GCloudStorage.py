@@ -1,7 +1,9 @@
 import os
 import logging
-from typing import Tuple
+
+import backoff as backoff
 import google.cloud.storage as gcloud
+from google.cloud.exceptions import GoogleCloudError
 from google.cloud.storage.blob import Blob
 from SwissKnife.info.BucketPath import split_bucket
 
@@ -44,6 +46,7 @@ class GCloudStorage:
         self.logger = logger
         self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
 
+    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=120)
     def download_to_local_file(self,
                                gs_path: str,
                                local_path: str,
@@ -54,7 +57,7 @@ class GCloudStorage:
 
         :param gs_path: The path of the Google Storage file. It can be complete or only a subpath. 
         :type gs_path: str
-        :param local_path: The path where the data will be writed 
+        :param local_path: The path where the data will be written
         :type local_path: str
         :param use_bucket_path_prefix: Add the BUCKET_PATH_PREFIX to the gs_path if it is a subpath. Defaults to True
         :type use_bucket_path_prefix: bool, optional
@@ -77,17 +80,15 @@ class GCloudStorage:
 
         # The file cloud be binary
         write_opts = "wb" if is_binary else "w"
+        self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
+        blob_from = bucket.blob(file_path)
+
         try:
-            self.logger.info(f"Downloading file '{file_path}' into file '{local_path}'")
-
-            blob_from = bucket.blob(file_path)
-
             with open(local_path, write_opts) as f:
                 blob_from.download_to_file(f)
-
-        except Exception as e:
+        except:
             self.logger.exception("Error downloading file from gcloud", exc_info=True)
-            raise RuntimeError(f"Error downloading file from gcloud : {e}")
+            raise
 
     def save_file(self,
                   origin_local_path: str,
