@@ -10,6 +10,8 @@ from SwissKnife.info.BucketPath import split_bucket
 
 from SwissKnife.info import BUCKET_NAME, BUCKET_PATH_PREFIX
 
+MAX_TIME_RETRYING = 300    # seconds, 5 minutes
+
 
 class GCloudStorage:
 
@@ -46,7 +48,7 @@ class GCloudStorage:
         self.logger = logger
         self.logger.info(f"Building a new gcloud Storage client for bucket {self.bucket_name}")
 
-    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=120)
+    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=MAX_TIME_RETRYING)
     def download_to_local_file(self,
                                gs_path: str,
                                local_path: str,
@@ -149,6 +151,7 @@ class GCloudStorage:
                                     destination_file_name=destination_file_name,
                                     metadata=metadata)
 
+    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=MAX_TIME_RETRYING)
     def save_to_storage(self,
                         data,
                         data_encoding: str,
@@ -269,6 +272,7 @@ class GCloudStorage:
                                                           with_gs=False)
         return self.bucket.list_blobs(prefix=list_prefix)
 
+    @backoff.on_exception(backoff.expo, GoogleCloudError, max_time=MAX_TIME_RETRYING)
     def copy_blob(self, src_blob: Blob, dst_storage: "GCloudStorage", dst_file_name: str, mode: str = "copy") -> Blob:
         """Copy a file to a new location (in the same or in another bucket) with a new name
         using the google cloud api directly.
