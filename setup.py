@@ -8,7 +8,7 @@ DEPENDENCIES = [
 EXTRA_DEPENDENCIES = {
     "avro": ["fastavro==0.22.7"],
     "gcloud": ["google-cloud-storage==1.23.0", "backoff==1.10.0"],
-    "all": ["fastavro==0.22.7", "google-cloud-storage==1.23.0"]
+    "all": ["fastavro==0.22.7", "google-cloud-storage==1.23.0", "backoff==1.10.0"]
 }
 
 with open('README.md', encoding='utf-8') as f:
@@ -16,7 +16,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name='UDASwissKnife',
-    version='0.10.0',
+    version='0.11.1',
     description='Utils and common libraries for Python',
     long_description=long_description,
     long_description_content_type='text/markdown',
